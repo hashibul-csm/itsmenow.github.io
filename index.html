@@ -5,607 +5,1799 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hashibul Hasan | Senior Engineering Lead</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Motion.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=JetBrains+Mono:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
         
         :root {
-            --primary: #6366f1; --accent: #22d3ee; 
-            --bg: #030508; 
+            --primary: #8b5cf6;
+            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+            --accent: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
+            --secondary: #f472b6;
+            --secondary-gradient: linear-gradient(135deg, #f472b6 0%, #fb7185 50%, #fca5a5 100%);
+            --bg: #0a0a0f;
+            --bg-gradient: linear-gradient(135deg, #0a0a0f 0%, #111118 50%, #0a0a0f 100%);
             --text: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.03); 
+            --text-secondary: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.03);
             --card-border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(139, 92, 246, 0.2);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
         }
         
         [data-theme="light"] {
-            --bg: #f1f5f9; --text: #0f172a; 
-            --card-bg: rgba(255, 255, 255, 0.6); 
-            --card-border: rgba(255, 255, 255, 0.8); 
+            --bg: #fafafa;
+            --bg-gradient: linear-gradient(135deg, #fafafa 0%, #f8fafc 50%, #fafafa 100%);
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(148, 163, 184, 0.2);
+            --glow: rgba(139, 92, 246, 0.1);
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg); color: var(--text);
-            margin: 0; overflow-x: hidden;
-            @media (pointer: fine) { cursor: none !important; }
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text);
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
         }
 
-        /* --- BACKGROUND GLOW SYSTEM --- */
+        /* --- CINEMATIC SPLASH SCREEN --- */
+        #splash-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #030508; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+
+        .liquid-container {
+            position: absolute; inset: 0;
+            filter: blur(80px) contrast(1.2);
+            background: #030508;
+            z-index: 1;
+        }
+        .liquid-blob {
+            position: absolute; width: 65vw; height: 65vw;
+            background: var(--primary);
+            border-radius: 50%; opacity: 0.5;
+            will-change: transform; mix-blend-mode: screen;
+        }
+        .liquid-blob:nth-child(2) { background: var(--accent); width: 55vw; height: 55vw; opacity: 0.3; }
+        .liquid-blob:nth-child(3) { background: var(--secondary); width: 45vw; height: 45vw; opacity: 0.2; }
+
+        .splash-overlay {
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 30% center, transparent 0%, #030508 100%);
+            opacity: 0.8; z-index: 2;
+        }
+
+        .floating-artifacts { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+        .artifact-icon {
+            position: absolute; color: var(--accent); opacity: 0;
+            display: flex; align-items: center; justify-content: center;
+            filter: drop-shadow(0 0 15px rgba(228, 155, 166, 0.4));
+            font-size: 2rem;
+            width: 3rem;
+            height: 3rem;
+            animation: floatAround 20s infinite linear;
+        }
+        .artifact-icon:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .artifact-icon:nth-child(2) { left: 80%; top: 15%; animation-delay: 2.5s; }
+        .artifact-icon:nth-child(3) { left: 20%; top: 70%; animation-delay: 5s; }
+        .artifact-icon:nth-child(4) { left: 70%; top: 60%; animation-delay: 7.5s; }
+        .artifact-icon:nth-child(5) { left: 40%; top: 10%; animation-delay: 10s; }
+        .artifact-icon:nth-child(6) { left: 60%; top: 80%; animation-delay: 12.5s; }
+        .artifact-icon:nth-child(7) { left: 90%; top: 40%; animation-delay: 15s; }
+        .artifact-icon:nth-child(8) { left: 5%; top: 50%; animation-delay: 17.5s; }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -30px) rotate(90deg); }
+            50% { transform: translate(-20px, 40px) rotate(180deg); }
+            75% { transform: translate(-40px, -20px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        .status-node {
+            font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 13px;
+            border: 1.5px solid var(--accent); width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(84, 8, 99, 0.2); backdrop-filter: blur(5px);
+        }
+
+        .code-card {
+            position: relative; width: 90%; max-width: 600px;
+            background: rgba(15, 23, 42, 0.7); border-radius: 24px;
+            backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            opacity: 0; z-index: 10;
+            overflow: hidden;
+        }
+        .card-header { padding: 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: space-between; position: relative; }
+        .boot-loader { height: 4px; width: 0%; background: var(--accent); position: absolute; top: 0; left: 0; box-shadow: 0 0 20px var(--accent); z-index: 50; }
+        .card-body { padding: 40px; font-family: 'JetBrains Mono', monospace; font-size: 15px; line-height: 1.8; }
+        .card-body > div { opacity: 0; transform: translateY(5px); }
+        .token-keyword { color: var(--accent); }
+        .token-string { color: var(--secondary); }
+        .token-key { color: #ffffff; opacity: 0.9; }
+
+        .splash-actions { padding: 30px 40px 40px; display: flex; gap: 24px; justify-content: center; opacity: 0; z-index: 10; }
+        .btn-premium { 
+            position: relative; padding: 18px 44px; border-radius: 16px; font-weight: 800; 
+            text-transform: uppercase; letter-spacing: 3px; font-size: 11px; 
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1); 
+            display: flex; align-items: center; gap: 14px; 
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(15, 23, 42, 0.4); color: white; cursor: pointer;
+        }
+        .btn-premium::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(var(--accent) 0.5px, transparent 0.5px); background-size: 8px 8px; opacity: 0; transition: opacity 0.3s; z-index: 1; }
+        .btn-premium::before { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 15px var(--accent); z-index: 5; opacity: 0; }
+        .btn-premium:hover::after { opacity: 0.15; }
+        .btn-premium:hover { border-color: var(--accent); }
+        .btn-premium:hover::before { animation: biometric-scan 2.5s infinite; opacity: 1; }
+        @keyframes biometric-scan { 0% { top: -10%; } 100% { top: 110%; } }
+        .btn-premium-enter { background: white; color: var(--primary); }
+
+        /* --- PROFESSIONAL LIGHTING SYSTEM --- */
+        .grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Cfilter id='noiseFilter'%3%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04; pointer-events: none; z-index: 50; contrast: 150%; brightness: 100%;
+        }
+
         #glow-spotlight {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             pointer-events: none; z-index: -1;
             background: radial-gradient(
-                600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-                rgba(99, 102, 241, 0.12), 
+                800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                var(--glow), 
                 transparent 80%
             );
+            will-change: transform;
         }
 
         .bg-grid {
             position: fixed; inset: 0; z-index: -2;
-            background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), black, transparent 80%);
         }
-.animate-marquee {
-    display: flex;
-    flex-shrink: 0;
-    min-width: 100%;
-    align-items: center;
-    justify-content: space-around;
-    animation: scroll-marquee 10s linear infinite;
-}
 
-@keyframes scroll-marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
-}
+        [data-theme="light"] .bg-grid {
+            background-image: linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+        }
 
-/* Pause on hover to make it interactive */
-.marquee-container:hover .animate-marquee {
-    animation-play-state: paused;
-}
+        #bg-network-canvas {
+            position: fixed; inset: 0; z-index: -1.5; pointer-events: none; opacity: 0.4;
+        }
+
         .aura {
-    position: fixed;
-    width: 60vw;
-    height: 60vw;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.15;
-    z-index: -1;
-    pointer-events: none;
-    animation: float 20s infinite alternate;
-}
+            position: fixed; width: 80vw; height: 80vw; border-radius: 50%;
+            filter: blur(140px); opacity: 0.12; z-index: -3; pointer-events: none;
+            mix-blend-mode: plus-lighter;
+        }
+        [data-theme="light"] .aura { opacity: 0.08; mix-blend-mode: multiply; }
         
-        .aura-1 { background: #6366f1; top: -10%; left: -10%; }
-        .aura-2  {
-    background: #ec4899;
-    bottom: -10%;
-    right: -10%;
-    animation-delay: -5s;
-}
-        .aura-3  {
-    background: #22d3ee;
-    top: 20%;
-    right: 10%;
-    animation-delay: -10s;
-}
+        .aura-1 { background: var(--primary); top: -20%; left: -20%; animation: orbit 30s infinite linear; }
+        .aura-2 { background: var(--accent); bottom: -20%; right: -20%; animation: orbit 25s infinite linear reverse; }
+        .aura-3 { background: #8b5cf6; top: 40%; left: 50%; width: 40vw; height: 40vw; opacity: 0.05; animation: orbit 40s infinite linear; }
 
-        /* --- PILL BUTTONS (CANVAS) --- */
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(10%) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(10%) rotate(-360deg); }
+        }
+
         .canvas-btn-wrapper {
             position: relative; display: inline-flex; align-items: center;
             padding: 2px; border-radius: 9999px; overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .canvas-btn-wrapper:hover { transform: translateY(-2px) scale(1.02); }
-        .canvas-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .canvas-btn-wrapper:hover { transform: translateY(-2px); filter: brightness(1.2); }
+        .canvas-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6; }
+        
         .btn-content {
-            position: relative; z-index: 10; padding: 6px 16px;
-            background: rgba(10, 12, 18, 0.9);
+            position: relative; z-index: 10; padding: 10px 20px;
+            background: rgba(10, 12, 18, 0.98);
             border-radius: 9999px; display: flex; align-items: center; gap: 8px;
-            font-size: 12px; font-weight: 600; color: rgba(255, 255, 255, 0.9);
-            white-space: nowrap;
+            font-size: 12px; font-weight: 700; color: white;
+            white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);
         }
+        [data-theme="light"] .btn-content { background: #fff; color: #0f172a; border-color: rgba(15, 23, 42, 0.05); }
+
         @media (min-width: 768px) {
-            .btn-content { padding: 8px 20px; font-size: 13px; }
+            .btn-content { padding: 10px 24px; font-size: 13px; gap: 10px; }
         }
 
-        /* --- UI ELEMENTS --- */
         .text-fluid-h1 {
-            font-size: clamp(3rem, 8vw, 7.5rem);
-            line-height: 0.9;
-            letter-spacing: -0.04em;
+            font-size: clamp(2rem, 8vw, 7.5rem);
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.3)); }
+            100% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.6)); }
+        }
+
+        [data-theme="light"] .text-fluid-h1 {
+            background: linear-gradient(135deg, #1e293b 0%, #6366f1 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlowLight 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlowLight {
+            0% { filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.2)); }
+            100% { filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.4)); }
+        }
+
+        /* Modern Section Headings */
+        .section-heading {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes expandWidth {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Career Role Headings */
+        .role-heading {
+            font-size: clamp(1.25rem, 2.5vw, 2rem);
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .role-heading::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .role-heading:hover::before {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.2);
+            box-shadow: 0 0 15px var(--secondary);
+        }
+
+        .role-heading:hover {
+            color: var(--accent);
+            transform: translateX(10px);
+        }
+
+        /* Academic Degree Headings */
+        .degree-heading {
+            font-size: clamp(1.125rem, 2vw, 1.5rem);
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            animation: fadeInScale 0.6s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Animated Underline Effect */
+        .animated-underline {
+            position: relative;
+            display: inline-block;
+        }
+
+        .animated-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Additional Modern Typography Effects */
+
+        /* Staggered Animation for Multiple Elements */
+        .stagger-fade-in {
+            animation: staggerFadeIn 0.8s ease-out both;
+        }
+
+        .stagger-fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-fade-in:nth-child(4) { animation-delay: 0.4s; }
+        .stagger-fade-in:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Enhanced Text Shadow Effects */
+        .text-shadow-glow {
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        [data-theme="light"] .text-shadow-glow {
+            text-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Tinder-Style Match Modal */
+        .match-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(139, 92, 246, 0.3),
+                0 0 50px rgba(139, 92, 246, 0.2);
+            animation: matchCardBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform: scale(0.8);
+        }
+
+        @keyframes modalFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes matchCardBounce {
+            0% { transform: scale(0.3) rotate(-10deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+            70% { transform: scale(0.98) rotate(-1deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* Sparkle Effects */
+        .sparkles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: sparkleFloat 2s ease-out infinite;
+        }
+
+        .sparkle:nth-child(1) { left: 20%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { left: 40%; animation-delay: 0.2s; background: var(--secondary); }
+        .sparkle:nth-child(3) { left: 60%; animation-delay: 0.4s; }
+        .sparkle:nth-child(4) { left: 80%; animation-delay: 0.6s; background: var(--secondary); }
+        .sparkle:nth-child(5) { left: 30%; animation-delay: 0.8s; }
+        .sparkle:nth-child(6) { left: 70%; animation-delay: 1.0s; background: var(--secondary); }
+        .sparkle:nth-child(7) { left: 50%; animation-delay: 1.2s; }
+        .sparkle:nth-child(8) { left: 10%; animation-delay: 1.4s; background: var(--secondary); }
+        .sparkle:nth-child(9) { left: 90%; animation-delay: 1.6s; }
+        .sparkle:nth-child(10) { left: 25%; animation-delay: 1.8s; background: var(--secondary); }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translateY(100%) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Match Header */
+        .match-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .match-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        .match-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Enhanced testimonial in modal */
+        .match-testimonial {
+            text-align: center;
+        }
+
+        .match-quote {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            position: relative;
+        }
+
+        .match-quote::before {
+            content: '"';
+            font-size: 3rem;
+            color: var(--accent);
+            position: absolute;
+            left: -20px;
+            top: -10px;
+        }
+
+        .match-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .match-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .match-info h4 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .match-info p {
+            margin: 0.25rem 0 0 0;
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Close button */
+        .match-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .match-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            transform: scale(1.1);
+        }
+
+        /* Navigation Arrows */
+        .testimonial-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-nav:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .testimonial-nav-prev {
+            left: 20px;
+        }
+
+        .testimonial-nav-next {
+            right: 20px;
+        }
+
+        /* Testimonials Modal */
+        .testimonials-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            isolation: isolate; /* Isolate from page transforms */
+        }
+
+        .testimonials-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .testimonials-content {
+            position: relative;
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 1200px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(139, 92, 246, 0.3),
+                0 0 50px rgba(139, 92, 246, 0.2);
+            animation: modalFadeIn 0.5s ease-out, matchCardBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            /* Hide scrollbars for touch scroll effect */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        .testimonials-content::-webkit-scrollbar {
+            display: none;  /* Chrome, Safari, and Opera */
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .testimonial-card-simple {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-card-simple:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -1px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .testimonial-info h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-role {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .testimonial-company {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        .testimonial-rating {
+            color: #fbbf24;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-rating .fa-star {
+            margin: 0 2px;
+        }
+
+        .testimonial-quote {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text);
+            font-style: italic;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .testimonial-quote::before {
+            content: '"';
+            font-size: 3rem;
+            color: var(--accent);
+            position: absolute;
+            left: -10px;
+            top: -10px;
+            opacity: 0.3;
+        }
+
+        .testimonial-quote::after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--accent);
+            position: absolute;
+            right: -10px;
+            bottom: -20px;
+            opacity: 0.3;
+        }
+
+        .testimonials-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .testimonials-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            transform: scale(1.1);
+        }
+
+        /* Parallax Effects */
+        [data-parallax], .bento-card {
+            will-change: transform;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            transition: transform 0.1s ease-out;
+        }
+
+        .bento-card {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Enhanced parallax for different screen sizes */
+        @media (min-width: 768px) {
+            [data-parallax] {
+                transition: transform 0.15s ease-out;
+            }
+        }
+
+        /* Smooth scrolling for better parallax experience */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Performance optimization for parallax elements */
+        [data-parallax], .bento-card {
+            contain: layout style paint;
+        }
+
+        .card-hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        /* Gradient Text Animation */
+        .gradient-text-animated {
+            background: var(--primary-gradient);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .bento-card { 
-            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 2rem; 
-            backdrop-filter: blur(20px); transition: all 0.5s ease;
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1.5rem; 
+            backdrop-filter: blur(24px); transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+            position: relative; overflow: hidden;
         }
-        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s; }
+        [data-theme="light"] .bento-card {
+            box-shadow: 0 4px 24px -1px rgba(15, 23, 42, 0.05);
+        }
+
+        @media (min-width: 768px) {
+            .bento-card { border-radius: 2.5rem; }
+        }
+        
+        .bento-card::before {
+            content: ""; position: absolute; inset: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            opacity: 0; transition: opacity 0.5s; pointer-events: none;
+        }
+        [data-theme="light"] .bento-card::before {
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(99, 102, 241, 0.04), transparent 40%);
+        }
+
+        .bento-card:hover::before { opacity: 1; }
+        .bento-card:hover { border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5); }
+        [data-theme="light"] .bento-card:hover { box-shadow: 0 20px 40px -20px rgba(99, 102, 241, 0.2); }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1s cubic-bezier(0.2, 1, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-#cursor-dot {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: white;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    /* This makes the cursor change color based on background */
-    mix-blend-mode: difference;
-    will-change: transform;
-    display: none;
-}
-
-#cursor-ring {
-    position: fixed;
-    width: 40px;
-    height: 40px;
-    border: 1.5px solid white; /* White works best with blend modes */
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    mix-blend-mode: difference;
-    will-change: transform;
-    display: none;
-    transition: width 0.3s, height 0.3s, border-color 0.3s;
-}
-        @media (pointer: fine) {
-            #cursor-dot, #cursor-ring { display: block; }
+        #cursor-dot {
+            position: fixed; width: 6px; height: 6px; background: white; border-radius: 50%;
+            pointer-events: none; z-index: 9999; mix-blend-mode: difference; display: none;
+            will-change: transform;
         }
+        #cursor-ring {
+            position: fixed; width: 38px; height: 38px; border: 1px solid rgba(255,255,255,0.5); border-radius: 50%;
+            pointer-events: none; z-index: 9998; mix-blend-mode: difference; display: none;
+            transition: width 0.4s cubic-bezier(0.2, 1, 0.2, 1), height 0.4s cubic-bezier(0.2, 1, 0.2, 1), border-color 0.4s;
+            will-change: transform;
+        }
+        @media (pointer: fine) { #cursor-dot, #cursor-ring { display: block; } }
 
+        /* --- STICKY FLOATING NAVIGATION --- */
+        .floating-nav { 
+            position: fixed; 
+            bottom: 2.5rem; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(100px); 
+            z-index: 9999; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+            padding: 0.6rem; 
+            border-radius: 9999px; 
+            background: rgba(10, 12, 18, 0.6); 
+            backdrop-filter: blur(35px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            transition: all 0.8s cubic-bezier(0.2, 1, 0.2, 1); 
+            opacity: 0;
+            pointer-events: none;
+        }
+        .floating-nav.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+        .nav-item { width: 3.2rem; height: 3.2rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: rgba(255,255,255,0.4); transition: all 0.4s; }
+        .nav-item:hover { color: var(--accent); background: rgba(255,255,255,0.1); transform: translateY(-5px); }
+
+        /* --- TECH PILLS (FORCE SINGLE LINE) --- */
         .tech-pill {
-            @apply flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 transition-all duration-300 hover:bg-white/10 hover:border-indigo-500/50;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 12px !important;
+            padding: 12px 16px !important;
+            border-radius: 1.5rem !important;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+            white-space: nowrap !important;
+            flex-wrap: nowrap !important;
+        }
+        .tech-pill i, .tech-pill svg {
+            flex-shrink: 0 !important;
+            width: 18px !important;
+            height: 18px !important;
+            display: block !important;
+        }
+        .tech-pill span {
+            white-space: nowrap !important;
+            display: inline-block !important;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            flex-shrink: 0 !important;
+        }
+        [data-theme="light"] .tech-pill {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: #0f172a;
         }
 
-        .animate-marquee { display: flex; animation: marquee 40s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: flex; animation: scroll-marquee 40s linear infinite; }
+        @keyframes scroll-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        #terminal-mode {
-            backdrop-filter: blur(40px);
-            background: rgba(0, 0, 0, 0.85);
+        /* --- TERMINAL LIGHT MODE --- */
+        #terminal-mode { backdrop-filter: blur(60px); background: rgba(2, 4, 8, 0.95); transition: background-color 0.5s ease; }
+        [data-theme="light"] #terminal-mode { background: rgba(255, 255, 255, 0.95); }
+        
+        #terminal-output { transition: color 0.5s ease; }
+        [data-theme="light"] #terminal-output { color: #334155; }
+
+        [data-theme="light"] .term-user { color: #059669; }
+        [data-theme="light"] .term-path { color: #4f46e5; }
+        [data-theme="light"] .term-prompt { color: #0f172a; }
+        [data-theme="light"] .term-res { color: #475569; border-color: rgba(99, 102, 241, 0.2); }
+        
+        #terminal-input { transition: color 0.5s ease; }
+        [data-theme="light"] #terminal-input { color: #0f172a; }
+        [data-theme="light"] #terminal-input::placeholder { color: rgba(15, 23, 42, 0.3); }
+
+        [data-theme="light"] #terminal-header { background: rgba(15, 23, 42, 0.03); border-color: rgba(15, 23, 42, 0.05); }
+        [data-theme="light"] #terminal-input-bar { background: rgba(15, 23, 42, 0.02); border-color: rgba(15, 23, 42, 0.05); }
+
+        .terminal-loading {
+            animation: terminalPulse 1.5s infinite;
         }
-        #terminal-output::-webkit-scrollbar {
-    width: 6px;
-}
-#terminal-output::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-
-#terminal-input {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-}
-
-/* Authentic Boot Pulse Animation */
-.boot-line {
-    animation: fadeIn 0.1s ease-in;
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-}
+        @keyframes terminalPulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
     </style>
 </head>
-<body>
+<body class="selection:bg-indigo-500/40">
+    <!-- CINEMATIC SPLASH -->
+    <div id="splash-screen">
+        <div class="liquid-container">
+            <div class="liquid-blob"></div>
+            <div class="liquid-blob"></div>
+            <div class="liquid-blob"></div>
+        </div>
+        <div class="floating-artifacts">
+            <div class="artifact-icon tech-icon"><i class="fab fa-html5"></i></div>
+            <div class="artifact-icon tech-icon"><i class="fab fa-css3-alt"></i></div>
+            <div class="artifact-icon tech-icon"><i class="fab fa-js-square"></i></div>
+            <div class="artifact-icon tech-icon"><i class="fab fa-react"></i></div>
+            <div class="artifact-icon tech-icon"><i class="fab fa-node-js"></i></div>
+            <div class="artifact-icon tech-icon"><i class="fab fa-python"></i></div>
+            <div class="artifact-icon tech-icon"><i class="fas fa-database"></i></div>
+            <div class="artifact-icon tech-icon"><i class="fab fa-git-alt"></i></div>
+        </div>
+        <div class="splash-overlay"></div>
+        <div class="code-card">
+            <div class="boot-loader" id="boot-loader"></div>
+            <div class="card-header">
+                <div class="flex gap-2"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+                <div class="text-[9px] opacity-40 font-mono tracking-[3px] uppercase text-white">Kernel//Dev_Node</div>
+            </div>
+            <div id="code-body" class="card-body text-white">
+                <div><span class="token-keyword">const</span> <span class="token-key">developer</span> = {</div>
+                <div class="pl-8"><span class="token-key">name</span>: <span class="token-string">"Hashibul Hasan"</span>,</div>
+                <div class="pl-8"><span class="token-key">role</span>: <span class="token-string">"Senior Engineering Lead"</span>,</div>
+                <div class="pl-8"><span class="token-key">experience</span>: <span class="token-string">"11 years, Distributed Systems"</span>,</div>
+                <div class="pl-8"><span class="token-key">auth</span>: <span class="token-boolean">true</span> <span class="text-green-500">✓</span></div>
+                <div>};</div>
+            </div>
+            <div class="splash-actions">
+                <button onclick="exitSplash()" class="btn-premium btn-premium-enter"><i class="fas fa-bolt w-4 h-4 z-10"></i> <span class="z-10">Enter System</span></button>
+                <button onclick="window.portfolioTerminal.toggleTerminal(); exitSplash();" class="btn-premium btn-premium-contact"><i class="fas fa-terminal w-4 h-4 z-10"></i> <span class="z-10">Initialize</span></button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="grain"></div>
+    <div id="glow-spotlight"></div>
     <div class="bg-grid"></div>
+    <canvas id="bg-network-canvas"></canvas>
     <div class="aura aura-1"></div>
     <div class="aura aura-2"></div>
-        <div class="aura aura-3"></div>
+    <div class="aura aura-3"></div>
+    
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
 
     <header class="fixed top-0 w-full z-[100]">
-        <nav class="px-6 py-4 md:px-8 md:py-5 flex justify-between items-center bg-transparent backdrop-blur-xl border-b border-white/5">
-            <div class="text-xl font-black tracking-tighter uppercase">H.HASAN <span class="text-indigo-500">_</span></div>
-            <div class="flex items-center gap-4">
-                <a href="path-to-your-resume.pdf" download="Hashibul_Hasan_Resume" class="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-indigo-600 border border-white/10 rounded-full transition-all duration-300 group">
-                    <i data-lucide="download" class="w-4 h-4 text-indigo-400 group-hover:text-white"></i>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-white">Resume</span>
-                </a>
-
-                <button onclick="toggleTheme()" class="w-10 h-10 bento-card flex items-center justify-center hover:border-indigo-500 transition">
-                    <i id="theme-icon" data-lucide="moon" class="w-4 h-4 md:w-5 md:h-5"></i>
+        <nav class="px-4 py-4 md:px-16 md:py-8 flex justify-between items-center backdrop-blur-md border-b border-white/[0.04]">
+            <div class="text-lg md:text-xl font-extrabold tracking-tighter uppercase flex items-center gap-2">
+                H.HASAN <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+            </div>
+            <div class="flex items-center gap-3 md:gap-6">
+                <button onclick="toggleTheme()" class="w-10 h-10 md:w-12 md:h-12 bento-card flex items-center justify-center hover:border-indigo-500/50 transition bg-transparent border-white/[0.08]">
+                    <i id="theme-icon" class="fas fa-moon w-4 h-4 text-indigo-400"></i>
                 </button>
-                <button onclick="toggleTerminal()" class="hidden md:flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition">
-                    <i data-lucide="terminal" class="w-4 h-4 text-cyan-400"></i> CLI [~]
+                <button onclick="window.portfolioTerminal.toggleTerminal()" class="hidden sm:flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 hover:opacity-100 transition group">
+                    <i class="fas fa-terminal w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform"></i> EXEC_CMD
                 </button>
-                <a href="mailto:hashibul1914@gmail.com" class="px-5 py-2 bg-indigo-600 text-white rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-500 transition">
-                    INITIALIZE_PING
+                <a href="blog.html" target="_blank" class="hidden sm:flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 hover:opacity-100 transition group">
+                    <i class="fas fa-book w-4 h-4 text-green-400 group-hover:scale-110 transition-transform"></i> BLOG
                 </a>
+                <button onclick="openTestimonialsModal()" class="hidden sm:flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 hover:opacity-100 transition group">
+                    <i class="fas fa-comments w-4 h-4 text-purple-400 group-hover:scale-110 transition-transform"></i> TESTIMONIALS
+                </button>
+                <button onclick="init_Contact()" class="px-4 py-2.5 md:px-7 md:py-3 bg-indigo-600 text-white rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all">
+                    INIT_CONTACT
+                </button>
             </div>
         </nav>
         
-<div class="fixed top-14 md:top-20 w-full z-[90] bg-white/5 py-3 overflow-hidden border-b border-white/5 backdrop-blur-md">
-    <div class="marquee-container flex whitespace-nowrap">
-        <div class="animate-marquee flex gap-12 md:gap-16 items-center px-6">
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="cpu" class="inline w-3 h-3 mr-2 text-blue-400"></i> JAVA SPRING BOOT</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="code-2" class="inline w-3 h-3 mr-2 text-orange-400"></i> PHP LARAVEL</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="layers" class="inline w-3 h-3 mr-2 text-green-400"></i> NUXT.JS & VUE</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="shield-check" class="inline w-3 h-3 mr-2 text-purple-400"></i> OPENID CONNECT</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="database" class="inline w-3 h-3 mr-2 text-cyan-400"></i> MICROSERVICES</span>
+        <div class="bg-white/[0.02] py-4 overflow-hidden border-b border-white/[0.04] backdrop-blur-sm">
+            <div class="animate-marquee whitespace-nowrap flex gap-12 md:gap-20 items-center px-6 md:px-10">
+                <span class="font-mono text-[9px] md:text-[10px] uppercase font-bold tracking-[0.3em] flex items-center gap-3 opacity-60"><i class="fas fa-microchip text-blue-400 flex-shrink-0"></i> JAVA SPRING BOOT</span>
+                <span class="font-mono text-[9px] md:text-[10px] uppercase font-bold tracking-[0.3em] flex items-center gap-3 opacity-60"><i class="fas fa-code text-orange-400 flex-shrink-0"></i> PHP LARAVEL</span>
+                <span class="font-mono text-[9px] md:text-[10px] uppercase font-bold tracking-[0.3em] flex items-center gap-3 opacity-60"><i class="fas fa-layer-group text-green-400 flex-shrink-0"></i> NUXT.JS & VUE</span>
+                <span class="font-mono text-[9px] md:text-[10px] uppercase font-bold tracking-[0.3em] flex items-center gap-3 opacity-60"><i class="fas fa-shield-alt text-purple-400 flex-shrink-0"></i> OPENID CONNECT</span>
+                <span class="font-mono text-[9px] md:text-[10px] uppercase font-bold tracking-[0.3em] flex items-center gap-3 opacity-60"><i class="fas fa-database text-cyan-400 flex-shrink-0"></i> MICROSERVICES</span>
+                <!-- Loop -->
+                <span class="font-mono text-[9px] md:text-[10px] uppercase font-bold tracking-[0.3em] flex items-center gap-3 opacity-60"><i class="fas fa-microchip text-blue-400 flex-shrink-0"></i> JAVA SPRING BOOT</span>
+                <span class="font-mono text-[9px] md:text-[10px] uppercase font-bold tracking-[0.3em] flex items-center gap-3 opacity-60"><i class="fas fa-code text-orange-400 flex-shrink-0"></i> PHP LARAVEL</span>
+            </div>
         </div>
-        <div class="animate-marquee flex gap-12 md:gap-16 items-center px-6">
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="cpu" class="inline w-3 h-3 mr-2 text-blue-400"></i> JAVA SPRING BOOT</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="code-2" class="inline w-3 h-3 mr-2 text-orange-400"></i> PHP LARAVEL</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="layers" class="inline w-3 h-3 mr-2 text-green-400"></i> NUXT.JS & VUE</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="shield-check" class="inline w-3 h-3 mr-2 text-purple-400"></i> OPENID CONNECT</span>
-            <span class="font-mono text-[10px] uppercase font-bold tracking-[0.2em]"><i data-lucide="database" class="inline w-3 h-3 mr-2 text-cyan-400"></i> MICROSERVICES</span>
-        </div>
-    </div>
-</div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 pt-40 md:pt-56 pb-20">
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-20">
-            <div class="lg:col-span-8 bento-card p-8 md:p-20 reveal">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_15px_#22c55e]"></span>
-                    <span class="text-[9px] md:text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Assistant Manager @ Adventure Dhaka</span>
+    <main class="max-w-7xl mx-auto px-6 pt-48 md:pt-56 pb-20 md:pb-32">
+        <!-- Hero -->
+        <section  id="hero" class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 mb-20 md:mb-32">
+            <div class="lg:col-span-8 bento-card p-6 md:p-24 reveal">
+                <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+                    <div class="w-2.5 h-2.5 md:w-3 h-3 rounded-full bg-green-500 shadow-[0_0_20px_#22c55e]"></div>
+                    <span class="text-[9px] md:text-[11px] text-indigo-400 font-black uppercase tracking-[0.25em]">Assistant Manager @ Adventure Dhaka</span>
                 </div>
-                
-                <h1 class="text-fluid-h1 font-black mb-8 md:mb-10 leading-[0.85]">Architecting <br><span class="opacity-40">Resilience.</span></h1>
-                
-                <p class="text-base md:text-lg opacity-70 max-w-xl mb-10 md:mb-12 leading-relaxed">
-                    Senior Software Architect with <span class="text-white font-bold">11+ years</span> experience. Expert in building enterprise-grade <span class="text-indigo-400">Distributed Systems</span>.
+                <h1 class="text-4xl md:text-6xl font-black mb-8 md:mb-10 leading-[0.9] text-white">Architecting <br>Resilience.</h1>
+                <p class="text-base md:text-xl opacity-60 max-w-xl mb-12 md:mb-16 leading-relaxed font-light">
+                    Senior Software Architect with <span class="text-white font-semibold">11+ years</span> experience. Specialized in building enterprise-grade <span class="text-indigo-400">Distributed Systems</span> and high-performance financial nodes.
                 </p>
-
-                <div class="flex flex-wrap gap-3">
-                    <a href="https://bd.linkedin.com/in/hashibulh" target="_blank" class="canvas-btn-wrapper" data-color="#ffffff">
+                <div class="flex flex-wrap gap-3 md:gap-5">
+                    <a href="https://bd.linkedin.com/in/hashibulh" target="_blank" class="canvas-btn-wrapper" data-color="#6366f1">
                         <canvas class="canvas-bg"></canvas>
-                        <div class="btn-content"><i data-lucide="linkedin" class="w-4 h-4 text-blue-400"></i> LinkedIn</div>
+                        <div class="btn-content"><i class="fab fa-linkedin w-4 h-4 flex-shrink-0"></i> LinkedIn</div>
                     </a>
-                    <button onclick="toggleTerminal()" class="canvas-btn-wrapper" data-color="#ffffff">
+                    <button onclick="window.portfolioTerminal.toggleTerminal()" class="canvas-btn-wrapper" data-color="#22d3ee">
                         <canvas class="canvas-bg"></canvas>
-                        <div class="btn-content"><i data-lucide="terminal" class="w-4 h-4 text-slate-400"></i> Execute protocols</div>
+                        <div class="btn-content"><i class="fas fa-terminal w-4 h-4 flex-shrink-0"></i> SYSTEM_CORE</div>
                     </button>
+                    <a href="#" class="canvas-btn-wrapper" data-color="#ffffff">
+                        <canvas class="canvas-bg"></canvas>
+                        <div class="btn-content"><i class="fas fa-file-alt w-4 h-4 flex-shrink-0"></i> CV_EXP.PDF</div>
+                    </a>
                 </div>
             </div>
-
-            <div class="lg:col-span-4 flex flex-col gap-6 reveal">
-                <div class="bento-card relative overflow-hidden h-[300px] lg:h-[400px]">
-                    <div class="absolute top-6 right-6 z-10">
-                        <div class="px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-green-500/30 flex items-center gap-2">
-                            <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            <span class="text-[9px] font-bold uppercase tracking-widest text-green-400">Available for hire</span>
-                        </div>
-                    </div>
-
-                    <img src="images/photo.jpg" class="w-full h-full object-cover grayscale brightness-50">
-                    
-                    <div class="absolute bottom-10 left-10 text-white">
-                        <div class="text-6xl font-black italic text-indigo-500">11+</div>
-                        <div class="text-[10px] font-bold uppercase tracking-widest opacity-60">Years Industry XP</div>
-                    </div>
-                </div>
-                
-                <div class="flex flex-wrap gap-3">
-                    <div class="canvas-btn-wrapper group" data-color="#10b981">
-                        <canvas class="canvas-bg"></canvas>
-                        <div class="btn-content">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform"></i>
-                            <span>Certified Scrum Master®</span>
-                        </div>
-                    </div>
-
-                    <div class="canvas-btn-wrapper group" data-color="#ff9900">
-                        <canvas class="canvas-bg"></canvas>
-                        <div class="btn-content">
-                            <i data-lucide="cloud" class="w-4 h-4 text-orange-400 group-hover:scale-110 transition-transform"></i>
-                            <span>AWS Certified</span>
-                        </div>
-                    </div>
-                       
-                    <div class="canvas-btn-wrapper group" data-color="#ff2d20">
-                        <canvas class="canvas-bg"></canvas>
-                        <div class="btn-content">
-                            <i data-lucide="code-2" class="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform"></i>
-                            <span>Laravel Expert</span>
-                        </div>
+            <div class="lg:col-span-4 flex flex-col gap-6 md:gap-8 reveal">
+                <div class="bento-card relative overflow-hidden h-64 md:h-full min-h-[300px] md:min-h-[450px]">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/90 z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale brightness-75 hover:scale-105 transition-transform duration-1000" alt="Profile">
+                    <div class="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20">
+                        <div class="text-5xl md:text-7xl font-black italic text-indigo-500 tracking-tighter">11<span class="text-xl md:text-2xl not-italic opacity-50">+</span></div>
+                        <div class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] opacity-40">Years Industry XP</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div class="flex items-center gap-4 mb-10 reveal">
-            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter">Technical Arsenal</h2>
-            <div class="h-px flex-1 bg-white/10"></div>
+        <!-- Technical Arsenal -->
+        <div  id="skills"  class="flex items-center gap-4 md:gap-6 mb-12 md:mb-16 reveal" data-parallax="0.1">
+            <h2 class="section-heading">Technical Arsenal</h2>
+            <div class="h-px flex-1 bg-white/[0.08] dark:bg-white/[0.08] bg-slate-200"></div>
         </div>
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 reveal">
-            <div class="bento-card p-8 flex flex-col gap-6">
-                <div class="flex justify-between items-center"><i data-lucide="server" class="w-6 h-6 text-blue-400"></i><span class="font-mono text-[10px] opacity-40 uppercase">Backend</span></div>
-                <div class="space-y-3">
-                    <div class="tech-pill"><i data-lucide="cpu" class="w-4 h-4 text-orange-400"></i><span class="text-xs font-bold uppercase">Spring Boot</span></div>
-                    <div class="tech-pill"><i data-lucide="code-2" class="text-red-400 w-4 h-4"></i><span class="text-xs font-bold uppercase">PHP Laravel</span></div>
+        <section id="skills" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-20 md:mb-32 reveal" data-parallax="0.15">
+            <div class="bento-card p-8 md:p-10 flex flex-col gap-6 md:gap-8 group stagger-fade-in card-hover-lift">
+                <div class="flex justify-between items-center"><i class="fas fa-server w-7 h-7 text-indigo-400 group-hover:scale-110 transition-transform flex-shrink-0"></i><span class="font-mono text-[10px] opacity-30 uppercase tracking-widest">Backend</span></div>
+                <div class="space-y-3 md:space-y-4">
+                    <div class="tech-pill"><i class="fas fa-microchip text-orange-400"></i><span>Spring Boot / Java</span></div>
+                    <div class="tech-pill"><i class="fas fa-code text-red-500"></i><span>PHP Laravel</span></div>
                 </div>
             </div>
-            <div class="bento-card p-8 flex flex-col gap-6">
-                <div class="flex justify-between items-center"><i data-lucide="layout" class="w-6 h-6 text-emerald-400"></i><span class="font-mono text-[10px] opacity-40 uppercase">Frontend</span></div>
-                <div class="space-y-3">
-                    <div class="tech-pill"><i data-lucide="layers" class="w-4 h-4 text-green-400"></i><span class="text-xs font-bold uppercase">Nuxt / Vue.js</span></div>
-                    <div class="tech-pill"><i data-lucide="palette" class="w-4 h-4 text-pink-400"></i><span class="text-xs font-bold uppercase">Tailwind CSS</span></div>
+            <div class="bento-card p-8 md:p-10 flex flex-col gap-6 md:gap-8 group stagger-fade-in card-hover-lift">
+                <div class="flex justify-between items-center"><i class="fas fa-columns w-7 h-7 text-cyan-400 group-hover:scale-110 transition-transform flex-shrink-0"></i><span class="font-mono text-[10px] opacity-30 uppercase tracking-widest">Frontend</span></div>
+                <div class="space-y-3 md:space-y-4">
+                    <div class="tech-pill"><i class="fas fa-layer-group text-green-400"></i><span>Nuxt / Vue.js</span></div>
+                    <div class="tech-pill"><i class="fas fa-palette text-pink-400"></i><span>Tailwind CSS</span></div>
                 </div>
             </div>
-            <div class="bento-card p-8 flex flex-col gap-6">
-                <div class="flex justify-between items-center"><i data-lucide="webhook" class="w-6 h-6 text-purple-400"></i><span class="font-mono text-[10px] opacity-40 uppercase">Architecture</span></div>
-                <div class="space-y-3">
-                    <div class="tech-pill"><i data-lucide="database" class="w-4 h-4 text-cyan-400"></i><span class="text-xs font-bold uppercase">Microservices</span></div>
-                    <div class="tech-pill"><i data-lucide="shield-check" class="w-4 h-4 text-yellow-400"></i><span class="text-xs font-bold uppercase">OIDC / Keycloak</span></div>
+            <div class="bento-card p-8 md:p-10 flex flex-col gap-6 md:gap-8 group stagger-fade-in card-hover-lift">
+                <div class="flex justify-between items-center"><i class="fas fa-link w-7 h-7 text-purple-400 group-hover:scale-110 transition-transform flex-shrink-0"></i><span class="font-mono text-[10px] opacity-30 uppercase tracking-widest">Architecture</span></div>
+                <div class="space-y-3 md:space-y-4">
+                    <div class="tech-pill"><i class="fas fa-database text-cyan-400"></i><span>Microservices / gRPC</span></div>
+                    <div class="tech-pill"><i class="fas fa-shield-alt text-yellow-400"></i><span>OIDC / Keycloak</span></div>
                 </div>
             </div>
-            <div class="bento-card p-8 flex flex-col gap-6">
-                <div class="flex justify-between items-center"><i data-lucide="cloud" class="w-6 h-6 text-pink-500"></i><span class="font-mono text-[10px] opacity-40 uppercase">Infra</span></div>
-                <div class="space-y-3">
-                    <div class="tech-pill"><i data-lucide="infinity" class="w-4 h-4 text-blue-500"></i><span class="text-xs font-bold uppercase">CI/CD / Docker</span></div>
-                    <div class="tech-pill"><i data-lucide="terminal" class="w-4 h-4 text-slate-400"></i><span class="text-xs font-bold uppercase">AWS / Linux</span></div>
+            <div class="bento-card p-8 md:p-10 flex flex-col gap-6 md:gap-8 group stagger-fade-in card-hover-lift">
+                <div class="flex justify-between items-center"><i class="fas fa-cloud w-7 h-7 text-pink-500 group-hover:scale-110 transition-transform flex-shrink-0"></i><span class="font-mono text-[10px] opacity-30 uppercase tracking-widest">Infra</span></div>
+                <div class="space-y-3 md:space-y-4">
+                    <div class="tech-pill"><i class="fas fa-box text-blue-500"></i><span>Docker / K8s</span></div>
+                    <div class="tech-pill"><i class="fas fa-cloud text-slate-400"></i><span>AWS / DevOps</span></div>
                 </div>
             </div>
         </section>
 
-        <div id="career-section" class="flex items-center gap-4 mb-10 reveal">
-            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter">Career Evolution</h2>
-            <div class="h-px flex-1 bg-white/10"></div>
+        <!-- Experience -->
+        <div id="experience-section" class="flex items-center gap-4 md:gap-6 mb-12 md:mb-16 reveal" data-parallax="0.12">
+            <h2 class="section-heading">Career Evolution</h2>
+            <div class="h-px flex-1 bg-white/[0.08] dark:bg-white/[0.08] bg-slate-200"></div>
         </div>
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 reveal">
-            <div class="bento-card p-8">
-                <span class="font-mono text-[10px] text-indigo-400 font-bold uppercase">2023 - Present</span>
-                <h3 class="text-xl font-bold mt-2">Assistant Manager</h3>
-                <p class="text-sm opacity-60 mb-4 text-cyan-400 font-bold">Adventure Dhaka Limited</p>
-                <p class="text-xs leading-relaxed opacity-70">Leading a 20+ person engineering team and architecting resilient fintech systems.</p>
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-20 md:mb-32 reveal" data-parallax="0.18">
+            <div class="bento-card p-8 md:p-10 group">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="font-mono text-[10px] md:text-[11px] text-indigo-400 font-black uppercase">2023 - Pres.</span>
+                    <i class="fas fa-external-link-alt w-4 h-4 opacity-20 group-hover:opacity-100 transition"></i>
+                </div>
+                <h3 class="role-heading">Assistant Manager</h3>
+                <p class="text-xs md:text-sm opacity-50 mb-6 text-cyan-400 font-bold tracking-widest uppercase">Adventure Dhaka Ltd.</p>
+                <p class="text-xs md:text-sm leading-relaxed opacity-50 group-hover:opacity-80 transition-opacity">Architecting resilient fintech ecosystems and leading high-capacity engineering teams through complex delivery cycles.</p>
             </div>
-            <div class="bento-card p-8">
-                <span class="font-mono text-[10px] text-slate-500 font-bold uppercase">2019 - 2023</span>
-                <h3 class="text-xl font-bold mt-2">Team Lead</h3>
-                <p class="text-sm opacity-60 mb-4 text-pink-400 font-bold">Singularity Limited</p>
-                <p class="text-xs leading-relaxed opacity-70">Directed the Nagad (Fintech) architecture and major microservices migrations.</p>
+            <div class="bento-card p-8 md:p-10 group">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="font-mono text-[10px] md:text-[11px] text-slate-500 font-black uppercase">2019 - 2023</span>
+                    <i class="fas fa-external-link-alt w-4 h-4 opacity-20 group-hover:opacity-100 transition"></i>
+                </div>
+                <h3 class="role-heading">Team Lead</h3>
+                <p class="text-xs md:text-sm opacity-50 mb-6 text-pink-400 font-bold tracking-widest uppercase">Singularity Ltd.</p>
+                <p class="text-xs md:text-sm leading-relaxed opacity-50 group-hover:opacity-80 transition-opacity">Directed core architecture for Nagad (Fintech) and managed migrations from monolithic systems to micro-architectures.</p>
             </div>
-            <div class="bento-card p-8">
-                <span class="font-mono text-[10px] text-slate-500 font-bold uppercase">2018 - 2019</span>
-                <h3 class="text-xl font-bold mt-2">Senior Developer</h3>
-                <p class="text-sm opacity-60 mb-4 text-yellow-400 font-bold">MC ONLINE, Malaysia</p>
-                <p class="text-xs leading-relaxed opacity-70">Full-stack ERP development and implementation of cloud-native workflows.</p>
+            <div class="bento-card p-8 md:p-10 group">
+                <div class="flex justify-between items-start mb-6">
+                    <span class="font-mono text-[10px] md:text-[11px] text-slate-500 font-black uppercase">2018 - 2019</span>
+                    <i class="fas fa-external-link-alt w-4 h-4 opacity-20 group-hover:opacity-100 transition"></i>
+                </div>
+                <h3 class="role-heading">Senior Developer</h3>
+                <p class="text-xs md:text-sm opacity-50 mb-6 text-yellow-400 font-bold tracking-widest uppercase">MC ONLINE, Malaysia</p>
+                <p class="text-xs md:text-sm leading-relaxed opacity-50 group-hover:opacity-80 transition-opacity">Engineered cloud-native ERP solutions and implemented real-time inventory management workflows using Laravel.</p>
             </div>
         </section>
 
-        <div id="academic-section" class="flex items-center gap-4 mb-10 reveal">
-            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter">Academic Roots</h2>
-            <div class="h-px flex-1 bg-white/10"></div>
+        <!-- Academic Roots -->
+        <div id="academic-section" class="flex items-center gap-4 md:gap-6 mb-12 md:mb-16 reveal" data-parallax="0.14">
+            <h2 class="section-heading">Academic Roots</h2>
+            <div class="h-px flex-1 bg-white/[0.08] dark:bg-white/[0.08] bg-slate-200"></div>
         </div>
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-6 reveal">
-            <div class="bento-card p-8 flex gap-6 items-start">
-                <div class="p-4 rounded-2xl bg-indigo-500/10 text-indigo-400 flex-shrink-0"><i data-lucide="graduation-cap" class="w-8 h-8"></i></div>
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-20 md:mb-32 reveal" data-parallax="0.16">
+            <div class="bento-card p-8 md:p-10 flex flex-col sm:flex-row gap-6 md:gap-8 items-start group">
+                <div class="p-4 md:p-5 rounded-2xl md:rounded-3xl bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform flex-shrink-0"><i class="fas fa-graduation-cap w-8 h-8 md:w-10 md:h-10"></i></div>
                 <div>
-                    <span class="font-mono text-[10px] text-indigo-400 font-bold uppercase">2015</span>
-                    <h3 class="text-lg md:text-xl font-bold mt-1">M.Sc in Computer Science</h3>
-                    <p class="text-xs md:text-sm opacity-60 text-cyan-400">Daffodil International University</p>
+                    <span class="font-mono text-[10px] md:text-[11px] text-indigo-400 font-black uppercase">Class of 2015</span>
+                    <h3 class="degree-heading">M.Sc in Computer Science</h3>
+                    <p class="text-xs md:text-sm opacity-50 text-cyan-400 font-bold uppercase tracking-widest mt-1">Daffodil International Univ.</p>
                 </div>
             </div>
-            <div class="bento-card p-8 flex gap-6 items-start">
-                <div class="p-4 rounded-2xl bg-cyan-500/10 text-cyan-400 flex-shrink-0"><i data-lucide="book-open" class="w-8 h-8"></i></div>
+            <div class="bento-card p-8 md:p-10 flex flex-col sm:flex-row gap-6 md:gap-8 items-start group">
+                <div class="p-4 md:p-5 rounded-2xl md:rounded-3xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 transition-transform flex-shrink-0"><i class="fas fa-book-open w-8 h-8 md:w-10 md:h-10"></i></div>
                 <div>
-                    <span class="font-mono text-[10px] text-slate-500 font-bold uppercase">2013</span>
-                    <h3 class="text-lg md:text-xl font-bold mt-1">B.Sc in Computer Science</h3>
-                    <p class="text-xs md:text-sm opacity-60 text-pink-400">Daffodil International University</p>
+                    <span class="font-mono text-[10px] md:text-[11px] text-slate-500 font-black uppercase">Class of 2013</span>
+                    <h3 class="degree-heading">B.Sc in Computer Science</h3>
+                    <p class="text-xs md:text-sm opacity-50 text-pink-400 font-bold uppercase tracking-widest mt-1">Daffodil International Univ.</p>
                 </div>
             </div>
         </section>
-        <div id="portfolio-section" class="flex items-center gap-4 mb-10 mt-20 reveal">
+
+        <!-- Portfolio -->
+        <div id="portfolio-section" class="flex items-center gap-4 md:gap-6 mb-12 md:mb-16 reveal">
             <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter">Selected Works</h2>
-            <div class="h-px flex-1 bg-white/10"></div>
+            <div class="h-px flex-1 bg-white/[0.08] dark:bg-white/[0.08] bg-slate-200"></div>
         </div>
-
-        <section class="grid grid-cols-1 md:grid-cols-12 gap-6 reveal">
-            <div class="md:col-span-8 bento-card overflow-hidden group relative">
-                <a href="https://your-live-link.com" target="_blank" class="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-indigo-600/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:scale-110 hover:bg-indigo-500 transition-all duration-300">
-                    <i data-lucide="external-link" class="w-5 h-5 text-white"></i>
-                </a>
-
-                <div class="relative h-64 md:h-80 overflow-hidden">
-                    <img src="images/project1.jpg" alt="Fintech" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#030508] via-[#030508]/40 to-transparent"></div>
-                    
-                    <div class="absolute bottom-6 left-6 right-6">
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-indigo-400 uppercase">Spring Boot</span>
-                            <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-cyan-400 uppercase">Redis</span>
-                            <span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-emerald-400 uppercase">Docker</span>
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 reveal">
+            <div class="md:col-span-8 bento-card overflow-hidden group">
+                <div class="relative h-64 md:h-[400px] overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000" alt="Fintech" class="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-10">
+                        <div class="flex gap-2 md:gap-3 mb-3 md:mb-4">
+                            <span class="px-2 py-1 md:px-3 md:py-1.5 rounded-lg md:rounded-xl bg-white/10 border border-white/10 text-[8px] md:text-[10px] font-black text-indigo-400 uppercase tracking-widest">SPRING BOOT</span>
+                            <span class="px-2 py-1 md:px-3 md:py-1.5 rounded-lg md:rounded-xl bg-white/10 border border-white/10 text-[8px] md:text-[10px] font-black text-cyan-400 uppercase tracking-widest">REDIS_SYNC</span>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">Fintech Core Engine</h3>
-                        <p class="text-sm opacity-70 max-w-lg">High-throughput transaction processor for digital financial services.</p>
+                        <h3 class="text-2xl md:text-4xl font-black mb-2 md:mb-3">Fintech Core Engine</h3>
+                        <p class="text-xs md:text-base opacity-60 max-w-lg leading-relaxed">High-throughput transaction processor capable of handling 10k+ requests per second with ACID compliance.</p>
                     </div>
                 </div>
             </div>
-
-            <div class="md:col-span-4 bento-card p-8 flex flex-col justify-between group relative">
-                <a href="#" class="absolute top-6 right-6 text-white/30 hover:text-indigo-400 transition-colors">
-                    <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
-                </a>
-
+            <div class="md:col-span-4 bento-card p-8 md:p-10 flex flex-col justify-between group">
                 <div>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-[9px] font-bold text-indigo-400 uppercase">OIDC</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Identity Provider</h3>
-                    <p class="text-xs leading-relaxed opacity-60 mb-4">Custom Keycloak implementation for multi-tenant enterprise SSO.</p>
+                    <div class="px-3 py-1.5 rounded-xl bg-pink-500/10 border border-pink-500/20 text-[9px] md:text-[10px] font-black text-pink-400 inline-block mb-6 md:mb-8 uppercase tracking-widest">IDENTITY_NODE</div>
+                    <h3 class="text-xl md:text-3xl font-black mb-3 md:mb-4 leading-tight group-hover:text-pink-400 transition-colors">SSO Multi-Tenant Provider</h3>
+                    <p class="text-xs md:text-sm leading-relaxed opacity-50">Custom Keycloak implementation with custom mappers for secure multi-tenant enterprise SSO.</p>
                 </div>
-                
-                <div class="flex flex-wrap gap-2">
-                    <span class="text-[9px] px-2 py-1 bg-white/5 rounded border border-white/10 font-bold opacity-50 uppercase">Keycloak</span>
-                    <span class="text-[9px] px-2 py-1 bg-white/5 rounded border border-white/10 font-bold opacity-50 uppercase">Java</span>
+                <div class="flex gap-2 md:gap-3 mt-8 md:mt-10">
+                    <span class="text-[9px] md:text-[10px] px-2 py-1 md:px-3 md:py-2 bg-white/[0.04] rounded-lg md:rounded-xl border border-white/[0.08] font-black opacity-40 uppercase tracking-widest">KEYCLOAK</span>
+                    <span class="text-[9px] md:text-[10px] px-2 py-1 md:px-3 md:py-2 bg-white/[0.04] rounded-lg md:rounded-xl border border-white/[0.08] font-black opacity-40 uppercase tracking-widest">JAVA_CORE</span>
                 </div>
             </div>
+        </section>
 
-            <div class="md:col-span-4 bento-card p-8 flex flex-col justify-between group">
-                <div>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-2 py-0.5 rounded bg-pink-500/10 border border-pink-500/20 text-[9px] font-bold text-pink-400 uppercase">Frontend</span>
+        <!-- Contact Form -->
+        <div id="contact-section" class="flex items-center gap-4 md:gap-6 mb-12 md:mb-16 mt-16 md:mt-20 reveal">
+            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter">Contact</h2>
+            <div class="h-px flex-1 bg-white/[0.08] dark:bg-white/[0.08] bg-slate-200"></div>
+        </div>
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 reveal">
+            <div class="md:col-span-8 bento-card p-8 md:p-10">
+                <h3 class="text-xl md:text-2xl font-black mb-6 md:mb-8">Get In Touch</h3>
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-semibold text-white/80 mb-2">Name</label>
+                            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-white/80 mb-2">Email</label>
+                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all">
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Nagad Admin</h3>
-                    <p class="text-xs leading-relaxed opacity-60">High-performance admin dashboard with real-time analytics.</p>
-                </div>
-                
-                <div class="flex flex-wrap gap-2">
-                    <span class="text-[9px] px-2 py-1 bg-white/5 rounded border border-white/10 font-bold opacity-50 uppercase">Nuxt.js</span>
-                    <span class="text-[9px] px-2 py-1 bg-white/5 rounded border border-white/10 font-bold opacity-50 uppercase">Tailwind</span>
-                </div>
+                    <div>
+                        <label for="subject" class="block text-sm font-semibold text-white/80 mb-2">Subject</label>
+                        <input type="text" id="subject" name="subject" required class="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-semibold text-white/80 mb-2">Message</label>
+                        <textarea id="message" name="message" rows="6" required class="w-full px-4 py-3 bg-white/[0.05] border border-white/[0.08] rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="px-8 py-4 bg-indigo-600 text-white rounded-lg font-bold uppercase tracking-wider hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all flex items-center gap-3">
+                        <i class="fas fa-paper-plane w-5 h-5"></i>
+                        Send Message
+                    </button>
+                </form>
             </div>
-
-            <div class="md:col-span-8 bento-card p-8 flex flex-col md:flex-row gap-8 items-center group relative">
-                <a href="#" class="absolute top-6 right-6 text-white/30 hover:text-indigo-400 transition-colors">
-                    <i data-lucide="external-link" class="w-5 h-5"></i>
-                </a>
-
-                <div class="flex-1">
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2.5 py-1 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 uppercase">Architecture</span>
+            <div class="md:col-span-4 bento-card p-8 md:p-10 flex flex-col justify-center">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-envelope w-8 h-8 text-indigo-400"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4">Microservices Mesh</h3>
-                    <p class="text-sm opacity-70 leading-relaxed mb-6">Service-to-service communication framework for distributed nodes.</p>
-                    <div class="flex flex-wrap gap-3">
-                        <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] font-mono text-slate-400 uppercase">gRPC</span>
-                        <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] font-mono text-slate-400 uppercase">Go</span>
-                        <span class="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] font-mono text-slate-400 uppercase">Kubernetes</span>
+                    <h4 class="text-lg font-bold mb-4">Direct Contact</h4>
+                    <p class="text-sm opacity-60 mb-6 leading-relaxed">Fill out the form and your message will open in your default email client for direct sending.</p>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-center gap-3 justify-center">
+                            <i class="fas fa-clock w-4 h-4 text-cyan-400"></i>
+                            <span class="opacity-60">Response within 24 hours</span>
+                        </div>
+                        <div class="flex items-center gap-3 justify-center">
+                            <i class="fas fa-shield-alt w-4 h-4 text-green-400"></i>
+                            <span class="opacity-60">Secure & Private</span>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="w-full md:w-48 h-32 rounded-2xl bg-indigo-500/5 border border-white/10 flex items-center justify-center group-hover:border-indigo-500/30 transition-colors">
-                    <i data-lucide="network" class="w-12 h-12 text-indigo-500/20 group-hover:text-indigo-500/50 transition-colors"></i>
                 </div>
             </div>
         </section>
     </main>
-
-<div id="terminal-mode" class="fixed inset-0 z-[300] hidden flex-col bg-[#0c0c0c]/95 backdrop-blur-2xl font-mono border border-white/10 shadow-2xl overflow-hidden">
-    <div class="flex items-center justify-between bg-[#1e1e1e] px-4 py-2 border-b border-white/5">
-        <div class="flex gap-2">
-            <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
-            <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
-            <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+    <!-- STICKY FIXED NAV -->
+    <nav class="floating-nav" id="main-dock">
+        <a href="#hero" class="nav-item"><i class="fas fa-home w-5 h-5"></i></a>
+        <a href="#skills" class="nav-item"><i class="fas fa-microchip w-5 h-5"></i></a>
+        <a href="#experience-section" class="nav-item"><i class="fas fa-chart-line w-5 h-5"></i></a>
+        <a href="#portfolio-section" class="nav-item"><i class="fas fa-layer-group w-5 h-5"></i></a>
+        <button onclick="openTestimonialsModal()" class="nav-item"><i class="fas fa-comments w-5 h-5"></i></button>
+        <a href="blog.html" class="nav-item" target="_blank"><i class="fas fa-book w-5 h-5"></i></a>
+        <a href="#contact-section" class="nav-item"><i class="fas fa-envelope w-5 h-5"></i></a>
+    </nav>
+    <!-- Terminal Overlay -->
+    <div id="terminal-mode" class="fixed inset-0 z-[300] hidden flex-col font-mono overflow-hidden">
+        <div id="terminal-header" class="flex items-center justify-between bg-white/[0.03] px-5 py-4 md:px-8 md:py-5 border-b border-white/[0.06] backdrop-blur-2xl">
+            <div class="flex gap-2.5 items-center">
+                <button onclick="window.portfolioTerminal.toggleTerminal()" title="Close" class="w-3.5 h-3.5 rounded-full bg-[#ff5f56] hover:brightness-110 transition-all active:scale-90 border border-black/10 flex items-center justify-center"></button>
+                <button onclick="window.portfolioTerminal.minimizeTerminal()" title="Minimize" class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] hover:brightness-110 transition-all active:scale-90 border border-black/10 flex items-center justify-center"></button>
+                <button onclick="window.portfolioTerminal.maximizeTerminal()" title="Maximize" class="w-3.5 h-3.5 rounded-full bg-[#27c93f] hover:brightness-110 transition-all active:scale-90 border border-black/10 flex items-center justify-center"></button>
+            </div>
+            <div class="text-[9px] md:text-[11px] text-white/30 font-black tracking-[0.3em] uppercase">SYSTEM_ROOT // HASAN_CORE_NODE</div>
+            <button onclick="window.portfolioTerminal.toggleTerminal()" class="text-white/30 hover:text-white transition-colors flex items-center justify-center"><i class="fas fa-times w-4 h-4 md:w-5 md:h-5"></i></button>
         </div>
-        <div class="text-[10px] text-white/40 font-bold tracking-widest uppercase flex items-center gap-2">
-            <i data-lucide="terminal" class="w-3 h-3"></i> bash — h.hasan — 80x24
-        </div>
-        <div class="w-12"></div> </div>
-
-    <div id="terminal-output" class="flex-1 overflow-y-auto p-6 text-sm leading-relaxed text-slate-300">
-        </div>
-
-    <div class="p-4 bg-[#161616] border-t border-white/5">
-        <div class="flex items-center gap-3">
-            <span class="text-emerald-400 font-bold">root@h-hasan</span>
-            <span class="text-white">:</span>
-            <span class="text-indigo-400">~</span>
-            <span class="text-white">$</span>
-            <input type="text" id="terminal-input" autocomplete="off" 
-                class="bg-transparent outline-none flex-1 text-white caret-indigo-500" 
-                placeholder="Ask me anything about Hasan's experience...">
+        <div id="terminal-output" class="flex-1 overflow-y-auto p-6 md:p-10 text-xs md:text-sm leading-relaxed md:leading-loose text-slate-400"></div>
+        <div id="terminal-input-bar" class="p-4 md:p-8 bg-black/40 border-t border-white/[0.06] backdrop-blur-2xl">
+            <div class="flex flex-wrap items-center gap-2 md:gap-4">
+                <div class="flex items-center gap-1">
+                    <span class="term-user text-emerald-500 font-bold text-[10px] md:text-sm">root@h-hasan</span>
+                    <span class="term-prompt text-indigo-400 text-[10px] md:text-sm">:</span>
+                    <span class="text-slate-500 text-[10px] md:text-sm">~</span>
+                    <span class="term-prompt text-white text-[10px] md:text-sm">$</span>
+                </div>
+                <input type="text" id="terminal-input" autocomplete="off" class="bg-transparent outline-none flex-1 text-white caret-indigo-500 text-[10px] md:text-sm" placeholder="Query system nodes...">
+            </div>
         </div>
     </div>
-</div>
-<script src="terminal.js"></script>
+
+    <script src="terminal.js"></script>
     <script>
-// --- CURSOR AND SMOOTH GLOW SYSTEM ---
-const dot = document.getElementById('cursor-dot');
-const ring = document.getElementById('cursor-ring');
+        const html = document.documentElement;
+        const { animate, stagger, spring } = Motion;
+        let isSplashExiting = false;
+        /**
+         * UTILITY: INITIALIZE OBSERVER
+         */
+        function initRevealObserver() {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        }
 
-let mouseX = 0, mouseY = 0;
-let ringX = 0, ringY = 0;
-let dotX = 0, dotY = 0;
+        function initMotionSplash() {
+            if (typeof Motion === 'undefined') return;
+            animate(".liquid-blob:nth-child(1)", { x: [0, 300, -200, 0], y: [0, -200, 200, 0], scale: [1, 1.4, 1] }, { duration: 25, repeat: Infinity, ease: "linear" });
+            animate(".liquid-blob:nth-child(2)", { x: [0, -350, 150, 0], y: [0, 250, -150, 0], scale: [1.2, 0.8, 1.2] }, { duration: 30, repeat: Infinity, ease: "linear" });
+            animate(".liquid-blob:nth-child(3)", { x: [0, 200, -300, 0], y: [0, 300, -50, 0], scale: [0.9, 1.3, 0.9] }, { duration: 22, repeat: Infinity, ease: "linear" });
+            document.querySelectorAll(".tech-icon").forEach((icon, i) => {
+                animate(icon, { opacity: [0, 0.6, 0] }, { duration: 15 + Math.random()*10, repeat: Infinity, delay: i*1, ease: "linear" });
+            });
+            animate(".code-card", { opacity: [0, 1], y: [100, 0], scale: [0.9, 1] }, { duration: 1.5, ease: [0.2, 1, 0.2, 1] });
+            animate("#boot-loader", { width: "100%" }, { duration: 2.5, ease: "easeInOut" });
+            animate(Array.from(document.querySelectorAll("#code-body > div")), { opacity: [0, 1], y: [10, 0] }, { delay: stagger(0.12, { start: 0.6 }), duration: 0.5 });
+            animate(".splash-actions", { opacity: [0, 1], y: [30, 0] }, { delay: 2.2, duration: 0.8 });
+        }
 
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    document.documentElement.style.setProperty('--mouse-x', mouseX + 'px');
-    document.documentElement.style.setProperty('--mouse-y', mouseY + 'px');
-});
+        function exitSplash() {
+            if (isSplashExiting) return;
+            const sEl = document.getElementById('splash-screen');
+            if (!sEl) return;
+            isSplashExiting = true;
 
-function animateCursor() {
-    dotX += (mouseX - dotX) * 0.2;
-    dotY += (mouseY - dotY) * 0.2;
-    dot.style.transform = `translate(${dotX}px, ${dotY}px) translate(-50%, -50%)`;
+            animate(sEl, { opacity: 0, scale: 2, filter: "brightness(5) blur(100px)" }, { 
+                duration: 1.4, 
+                ease: [0.7, 0, 0.3, 1],
+                onComplete: () => {
+                    const finalSplash = document.getElementById('splash-screen');
+                    if(finalSplash) finalSplash.remove();
+                    const portView = document.getElementById('portfolio-view');
+                    const mainDock = document.getElementById('main-dock');
+                    if(portView) portView.classList.remove('view-hidden');
+                    requestAnimationFrame(() => {
+                        if(portView) portView.classList.add('active');
+                        if(mainDock) mainDock.classList.add('active');
+                        initRevealObserver();
+                    });
+                }
+            });
+        }
+        
+        function initRevealObserver() {
+            const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }); }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        }
 
-    ringX += (mouseX - ringX) * 0.15;
-    ringY += (mouseY - ringY) * 0.15;
-    ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
-
-    requestAnimationFrame(animateCursor);
-}
-const mainHeading = document.querySelector('.text-fluid-h1');
-mainHeading.addEventListener('mouseenter', () => {
-    ring.style.borderColor = '#6366f1'; // Change to Indigo
-    ring.style.borderWidth = '4px';
-});
-mainHeading.addEventListener('mouseleave', () => {
-    ring.style.borderColor = 'white';
-    ring.style.borderWidth = '1.5px';
-});
-animateCursor();
-
-// --- DYNAMIC INTERACTION LOGIC ---
-const interactiveElements = document.querySelectorAll('a, button, .bento-card, .canvas-btn-wrapper');
-
-interactiveElements.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        // Expand the ring when hovering over cards or buttons
-        ring.style.width = '70px';
-        ring.style.height = '70px';
-        ring.style.borderColor = 'rgba(255, 255, 255, 1)';
-        dot.style.transform += ' scale(2)';
-    });
-    
-    el.addEventListener('mouseleave', () => {
-        // Shrink back to normal
-        ring.style.width = '40px';
-        ring.style.height = '40px';
-        ring.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-        dot.style.transform = dot.style.transform.replace(' scale(2)', '');
-    });
-});
-
-        // --- CANVAS BUTTON ANIMATION ---
-        function initCanvas() {
+        function initCanvasButtons() {
             document.querySelectorAll('.canvas-btn-wrapper').forEach(wrapper => {
-                const canvas = wrapper.querySelector('.canvas-bg');
-                if(!canvas) return;
-                const ctx = canvas.getContext('2d');
-                const color = wrapper.getAttribute('data-color');
+                const canvas = wrapper.querySelector('.canvas-bg'), ctx = canvas.getContext('2d');
+                const color = wrapper.getAttribute('data-color') || '#6366f1';
                 function draw() {
-                    canvas.width = wrapper.offsetWidth; canvas.height = wrapper.offsetHeight;
+                    if (canvas.width !== wrapper.offsetWidth || canvas.height !== wrapper.offsetHeight) { canvas.width = wrapper.offsetWidth; canvas.height = wrapper.offsetHeight; }
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
                     grad.addColorStop(0, color); grad.addColorStop(0.5, 'rgba(255,255,255,0.1)'); grad.addColorStop(1, color);
-                    ctx.strokeStyle = grad; ctx.lineWidth = 3; ctx.beginPath();
-                    ctx.roundRect(0, 0, canvas.width, canvas.height, 9999); ctx.stroke();
-                    requestAnimationFrame(draw);
+                    ctx.strokeStyle = grad; ctx.lineWidth = 4; ctx.beginPath();
+                    if (ctx.roundRect) ctx.roundRect(0, 0, canvas.width, canvas.height, 9999); else ctx.rect(0, 0, canvas.width, canvas.height);
+                    ctx.stroke();
                 }
-                draw();
+                draw(); window.addEventListener('resize', draw);
+            });
+        }
+        window.onload = () => {
+            initMotionSplash();
+            new PortfolioTerminal();
+            initCanvasButtons();
+            window.bgNetwork = new BackgroundNetwork();
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX, y = e.clientY;
+                document.documentElement.style.setProperty('--mouse-x', x + 'px');
+                document.documentElement.style.setProperty('--mouse-y', y + 'px');
+                const d = document.getElementById('cursor-dot'), r = document.getElementById('cursor-ring');
+                if (d) { d.style.left = x + 'px'; d.style.top = y + 'px'; d.style.transform = 'translate(-50%, -50%)'; }
+                if (r) { r.style.left = x + 'px'; r.style.top = y + 'px'; r.style.transform = 'translate(-50%, -50%)'; }
+            });
+        };
+        function toggleTheme() {
+            const target = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', target);
+            const themeIcon = document.getElementById('theme-icon');
+            themeIcon.className = target === 'dark' ? 'fas fa-moon w-4 h-4 text-indigo-400' : 'fas fa-sun w-4 h-4 text-indigo-400';
+            if(window.bgNetwork) window.bgNetwork.init();
+        }
+
+        class BackgroundNetwork {
+            constructor() {
+                this.canvas = document.getElementById('bg-network-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = []; this.particleCount = 50; this.maxDistance = 180;
+                this.mouseX = 0; this.mouseY = 0;
+                this.init(); this.animate();
+                window.addEventListener('resize', () => this.init());
+                document.addEventListener('mousemove', (e) => { this.mouseX = e.clientX; this.mouseY = e.clientY; });
+            }
+            init() {
+                this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight;
+                this.particles = [];
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push({ x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height, vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, size: Math.random() * 1.5 + 0.5 });
+                }
+            }
+            draw() {
+                const isLight = html.getAttribute('data-theme') === 'light';
+                const baseColor = isLight ? '99, 102, 241' : '255, 255, 255';
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                for (let i = 0; i < this.particles.length; i++) {
+                    let p = this.particles[i]; p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+                    const dxm = this.mouseX - p.x; const dym = this.mouseY - p.y; const distMouse = Math.sqrt(dxm * dxm + dym * dym);
+                    let focus = distMouse < 350 ? (1 - distMouse / 350) : 0;
+                    this.ctx.fillStyle = `rgba(${baseColor}, ${0.1 + focus * 0.4})`;
+                    this.ctx.beginPath(); this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); this.ctx.fill();
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        let p2 = this.particles[j]; const dx = p.x - p2.x; const dy = p.y - p2.y; const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < this.maxDistance) {
+                            const opacity = (1 - dist / this.maxDistance) * (0.05 + focus * 0.2);
+                            this.ctx.strokeStyle = `rgba(${baseColor}, ${opacity})`; this.ctx.lineWidth = 0.5;
+                            this.ctx.beginPath(); this.ctx.moveTo(p.x, p.y); this.ctx.lineTo(p2.x, p2.y); this.ctx.stroke();
+                        }
+                    }
+                }
+            }
+            animate() { this.draw(); requestAnimationFrame(() => this.animate()); }
+        }
+
+        const dot = document.getElementById('cursor-dot'), ring = document.getElementById('cursor-ring');
+        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            document.documentElement.style.setProperty('--mouse-x', mouseX + 'px');
+            document.documentElement.style.setProperty('--mouse-y', mouseY + 'px');
+        });
+        function animateCursor() {
+            dotX += (mouseX - dotX) * 0.5; dotY += (mouseY - dotY) * 0.5;
+            dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+            ringX += (mouseX - ringX) * 0.25; ringY += (mouseY - ringY) * 0.25;
+            ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+            requestAnimationFrame(animateCursor);
+        }
+        document.querySelectorAll('a, button, .bento-card, .canvas-btn-wrapper').forEach(el => {
+            el.addEventListener('mouseenter', () => { ring.style.width = '64px'; ring.style.height = '64px'; ring.style.borderColor = 'rgba(99, 102, 241, 0.9)'; ring.style.backgroundColor = 'rgba(99, 102, 241, 0.05)'; });
+            el.addEventListener('mouseleave', () => { ring.style.width = '38px'; ring.style.height = '38px'; ring.style.borderColor = 'rgba(255,255,255,0.5)'; ring.style.backgroundColor = 'transparent'; });
+        });
+
+        function initCanvasButtons() {
+            document.querySelectorAll('.canvas-btn-wrapper').forEach(wrapper => {
+                const canvas = wrapper.querySelector('.canvas-bg'), ctx = canvas.getContext('2d');
+                const color = wrapper.getAttribute('data-color') || '#6366f1';
+                function draw() {
+                    if (canvas.width !== wrapper.offsetWidth || canvas.height !== wrapper.offsetHeight) { canvas.width = wrapper.offsetWidth; canvas.height = wrapper.offsetHeight; }
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    grad.addColorStop(0, color); grad.addColorStop(0.5, 'rgba(255,255,255,0.1)'); grad.addColorStop(1, color);
+                    ctx.strokeStyle = grad; ctx.lineWidth = 4; ctx.beginPath();
+                    if (ctx.roundRect) ctx.roundRect(0, 0, canvas.width, canvas.height, 9999); else ctx.rect(0, 0, canvas.width, canvas.height);
+                    ctx.stroke();
+                }
+                draw(); window.addEventListener('resize', draw);
             });
         }
 
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const target = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', target);
-            document.getElementById('theme-icon').setAttribute('data-lucide', target === 'dark' ? 'moon' : 'sun');
-            lucide.createIcons();
+        function init_Contact() {
+            const modal = document.getElementById('contact-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        window.onload = () => {
-            initCanvas();
-            lucide.createIcons();
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        };
+        function closeContactModal() {
+            const modal = document.getElementById('contact-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Contact Form Handler
+        function handleContactFormSubmit(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+
+            // Construct mailto URL with form data
+            const recipient = 'hashibul1914@gmail.com';
+            const mailtoSubject = encodeURIComponent(`Portfolio Contact: ${subject}`);
+            const mailtoBody = encodeURIComponent(
+                `Hello Hashibul,\n\n` +
+                `You have received a new message from your portfolio contact form.\n\n` +
+                `From: ${name} (${email})\n` +
+                `Subject: ${subject}\n\n` +
+                `Message:\n${message}\n\n` +
+                `Best regards,\nPortfolio Contact System`
+            );
+
+            const mailtoUrl = `mailto:${recipient}?subject=${mailtoSubject}&body=${mailtoBody}`;
+
+            // Open default mail client
+            window.location.href = mailtoUrl;
+
+            // Reset form
+            event.target.reset();
+
+            // Show success message (optional)
+            alert('Opening your default email client with the message...');
+        }
+
+        // Testimonials Data and Functions
+        const testimonials = [
+            {
+                quote: "Hashibul transformed our monolithic architecture into a scalable microservices ecosystem. His expertise in Spring Boot and distributed systems delivered exceptional performance improvements.",
+                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000',
+                name: 'Sarah Chen',
+                role: 'CTO',
+                company: 'FinTech Solutions'
+            },
+            {
+                quote: "Outstanding leadership in our digital transformation. Hashibul's Laravel expertise and team management skills delivered our e-commerce platform ahead of schedule.",
+                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000',
+                name: 'Marcus Rodriguez',
+                role: 'CEO',
+                company: 'E-Commerce Plus'
+            },
+            {
+                quote: "Hashibul's Vue.js architecture and containerization strategy modernized our entire frontend infrastructure. The performance gains were remarkable.",
+                avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?q=80&w=1000',
+                name: 'Aisha Patel',
+                role: 'VP Engineering',
+                company: 'TechFlow'
+            },
+            {
+                quote: "Exceptional database design and optimization work. Hashibul's expertise in complex queries and performance tuning saved us countless hours of processing time.",
+                avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000',
+                name: 'David Kim',
+                role: 'Data Architect',
+                company: 'Analytics Pro'
+            },
+            {
+                quote: "Hashibul's OAuth implementation and security architecture gave us enterprise-grade authentication. His attention to security details is unparalleled.",
+                avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000',
+                name: 'Lisa Thompson',
+                role: 'Security Lead',
+                company: 'SecureBank'
+            },
+            {
+                quote: "Working with Hashibul was a game-changer for our startup. His full-stack expertise and mentorship helped us launch successfully within 6 months.",
+                avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000',
+                name: 'James Wilson',
+                role: 'Founder',
+                company: 'StartupXYZ'
+            }
+        ];
+
+        function openTestimonialsModal() {
+            const modal = document.getElementById('testimonials-modal');
+            const scrollY = window.scrollY;
+
+            // Apply counter-transform to modal to account for page scroll
+            modal.style.transform = `translateY(${-scrollY}px)`;
+            modal.style.display = 'flex';
+
+            // Don't prevent scrolling, but isolate the modal
+            loadTestimonials();
+        }
+
+        function closeTestimonialsModal() {
+            const modal = document.getElementById('testimonials-modal');
+            modal.style.display = 'none';
+            modal.style.transform = '';
+
+            // Trigger parallax update after modal closes
+            setTimeout(() => {
+                const parallaxElements = document.querySelectorAll('[data-parallax], .bento-card');
+                parallaxElements.forEach(element => {
+                    element.style.transform = '';
+                });
+            }, 100);
+        }
+
+        function loadTestimonials() {
+            const grid = document.querySelector('.testimonials-grid');
+            if (!grid) return;
+
+            // Clear existing testimonials
+            grid.innerHTML = '';
+
+            // Create testimonial cards
+            testimonials.forEach((testimonial, index) => {
+                const card = createTestimonialCard(testimonial);
+                grid.appendChild(card);
+            });
+        }
+
+        function createTestimonialCard(testimonial) {
+            const card = document.createElement('div');
+            card.className = 'testimonial-card-simple';
+
+            card.innerHTML = `
+                <div class="testimonial-header">
+                    <img src="${testimonial.avatar}" alt="${testimonial.name}" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h3>${testimonial.name}</h3>
+                        <div class="testimonial-role">${testimonial.role}</div>
+                        <div class="testimonial-company">${testimonial.company}</div>
+                    </div>
+                </div>
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="testimonial-quote">
+                    ${testimonial.quote}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Initialize contact form
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', handleContactFormSubmit);
+            }
+
+            // Initialize Parallax Effects
+            initParallax();
+        });
+
+        // Parallax Effect Function
+        function initParallax() {
+            const parallaxElements = document.querySelectorAll('[data-parallax], .bento-card');
+            let ticking = false;
+
+            function updateParallax() {
+                // Skip parallax effects if testimonials modal is open
+                const modal = document.getElementById('testimonials-modal');
+                if (modal && modal.style.display === 'flex') {
+                    return;
+                }
+
+                const scrolled = window.pageYOffset;
+                const windowHeight = window.innerHeight;
+
+                parallaxElements.forEach((element, index) => {
+                    const rect = element.getBoundingClientRect();
+                    const elementTop = rect.top + scrolled;
+                    const parallaxRate = parseFloat(element.dataset.parallax) || 0.1;
+
+                    // Calculate parallax offset
+                    const parallaxOffset = (scrolled - elementTop) * parallaxRate;
+
+                    // Apply different effects based on element type
+                    if (element.classList.contains('bento-card')) {
+                        // Cards have subtle floating and rotation effects
+                        const cardOffset = parallaxOffset * 0.5;
+                        const rotation = (scrolled - elementTop) * 0.0005;
+
+                        // Only apply effects when card is in viewport
+                        if (rect.top < windowHeight && rect.bottom > 0) {
+                            element.style.transform = `translateY(${cardOffset}px) rotateX(${rotation}deg)`;
+                        }
+                    } else {
+                        // Section headers and containers have parallax movement
+                        element.style.transform = `translateY(${parallaxOffset}px)`;
+                    }
+
+                    // Add subtle scale effect for cards in view
+                    if (element.classList.contains('bento-card') && rect.top < windowHeight * 0.8 && rect.bottom > windowHeight * 0.2) {
+                        const scale = 1 + Math.sin((scrolled - elementTop) * 0.001) * 0.02;
+                        element.style.transform += ` scale(${scale})`;
+                    }
+                });
+
+                ticking = false;
+            }
+
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            }
+
+            // Optimized scroll listener
+            window.addEventListener('scroll', requestTick, { passive: true });
+
+            // Initial call
+            updateParallax();
+        }
+
+        
+        document.addEventListener('keydown', (e) => { if (e.key === "Escape" && !document.getElementById('terminal-mode').classList.contains('hidden')) window.portfolioTerminal.toggleTerminal(); });
     </script>
+
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="bg-white/[0.02] border border-white/[0.08] rounded-2xl p-8 max-w-md w-full mx-4 backdrop-blur-md">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white uppercase tracking-wider">Contact Details</h3>
+                <button onclick="closeContactModal()" class="text-white/60 hover:text-white transition-colors">
+                    <i class="fas fa-times w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div onclick="window.location.href='mailto:hashibul1914@gmail.com'" class="flex items-center gap-4 p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.1] transition-colors group cursor-pointer">
+                    <div class="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center group-hover:bg-red-500/30 transition-colors">
+                        <i class="fas fa-envelope w-6 h-6 text-red-400"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-semibold">Gmail</div>
+                        <div class="text-white/60 text-sm">hashibul1914@gmail.com</div>
+                    </div>
+                </div>
+                <a href="https://linkedin.com/in/hashibul-hasan" target="_blank" class="flex items-center gap-4 p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.1] transition-colors group">
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
+                        <i class="fab fa-linkedin w-6 h-6 text-blue-400"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-semibold">LinkedIn</div>
+                        <div class="text-white/60 text-sm">linkedin.com/in/hashibul-hasan</div>
+                    </div>
+                </a>
+                <a href="https://facebook.com/hashibul.hasan" target="_blank" class="flex items-center gap-4 p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.1] transition-colors group">
+                    <div class="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center group-hover:bg-blue-600/30 transition-colors">
+                        <i class="fab fa-facebook w-6 h-6 text-blue-500"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-semibold">Facebook</div>
+                        <div class="text-white/60 text-sm">facebook.com/hashibul.hasan</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tinder-Style Match Modal -->
+    <div id="match-modal" class="match-modal">
+        <div class="match-card" id="match-card">
+            <button class="match-close" onclick="closeMatchModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="sparkles" id="sparkles">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+            </div>
+
+            <div class="match-header">
+                <h2 class="match-title">It's a Match! 💫</h2>
+                <p class="match-subtitle">Client testimonial unlocked</p>
+            </div>
+
+            <div class="match-testimonial" id="match-content">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Modal -->
+    <div id="testimonials-modal" class="testimonials-modal">
+        <div class="testimonials-overlay" onclick="closeTestimonialsModal()"></div>
+        <div class="testimonials-content">
+            <button class="testimonials-close" onclick="closeTestimonialsModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Testimonials Grid Container -->
+            <div class="testimonials-grid">
+                <!-- Cards will be dynamically generated -->
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

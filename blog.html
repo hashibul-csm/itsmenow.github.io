@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hashibul Hasan | Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Motion.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --accent: #22d3ee;
+            --secondary: #FFD3D5;
+            --bg: #030508;
+            --text: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --glow: rgba(99, 102, 241, 0.15);
+        }
+
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --text: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(84, 8, 99, 0.12);
+            --glow: rgba(84, 8, 99, 0.08);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        .blog-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            animation: blogCardFadeIn 0.6s ease-out both;
+        }
+
+        .blog-card:nth-child(1) { animation-delay: 0.1s; }
+        .blog-card:nth-child(2) { animation-delay: 0.2s; }
+        .blog-card:nth-child(3) { animation-delay: 0.3s; }
+        .blog-card:nth-child(4) { animation-delay: 0.4s; }
+        .blog-card:nth-child(5) { animation-delay: 0.5s; }
+        .blog-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes blogCardFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        .blog-card:hover::before {
+            opacity: 1;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(139, 92, 246, 0.1),
+                0 0 30px rgba(139, 92, 246, 0.1);
+        }
+
+        .blog-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .blog-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .blog-meta::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-gradient);
+            border-radius: 1px;
+        }
+
+        .blog-title {
+            color: var(--text);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .blog-card:hover .blog-title {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: translateX(4px);
+        }
+
+        .blog-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.8;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .blog-card:hover .blog-tag::before {
+            transform: scaleX(1);
+        }
+
+        .blog-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-read-more::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .blog-read-more:hover::before {
+            left: 100%;
+        }
+
+        .blog-read-more:hover {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-color: rgba(6, 182, 212, 0.4);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+        }
+
+        .blog-read-more i {
+            transition: transform 0.3s ease;
+        }
+
+        .blog-read-more:hover i {
+            transform: translateX(3px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            width: 3.2rem;
+            height: 3.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            color: var(--accent);
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 3.2rem;
+            height: 3.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent);
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500/40">
+    <!-- Back to Portfolio Button -->
+    <a href="index.html" class="back-btn" title="Back to Portfolio">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <!-- Theme Toggle -->
+    <button onclick="toggleTheme()" class="theme-toggle" title="Toggle Theme">
+        <i id="theme-icon" class="fas fa-moon"></i>
+    </button>
+
+    <!-- Blog Header -->
+    <header class="pt-32 pb-16 px-6 md:px-12">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">
+                Tech <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">Blog</span>
+            </h1>
+            <p class="text-lg md:text-xl opacity-70 leading-relaxed">
+                Insights, tutorials, and thoughts on software development, architecture, and emerging technologies
+            </p>
+        </div>
+    </header>
+
+    <!-- Blog Posts Grid -->
+    <main class="px-6 md:px-12 pb-20">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Blog Post 1 -->
+                <article class="blog-card p-6 group">
+                    <div class="blog-meta mb-3">Dec 15, 2024 • 5 min read</div>
+                    <h2 class="blog-title text-xl font-bold mb-3 leading-tight">
+                        Building Scalable Microservices with Spring Boot
+                    </h2>
+                    <p class="opacity-70 text-sm leading-relaxed mb-4">
+                        Learn how to design and implement microservices architecture using Spring Boot, covering service discovery, API gateways, and deployment strategies.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="blog-tag px-2 py-1 bg-indigo-500/20 text-indigo-400">Spring Boot</span>
+                        <span class="blog-tag px-2 py-1 bg-cyan-500/20 text-cyan-400">Microservices</span>
+                        <span class="blog-tag px-2 py-1 bg-green-500/20 text-green-400">Java</span>
+                    </div>
+                    <a href="blog-spring-microservices.html" class="blog-read-more">
+                        Read More <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </article>
+
+                <!-- Blog Post 2 -->
+                <article class="blog-card p-6 group">
+                    <div class="blog-meta mb-3">Nov 28, 2024 • 7 min read</div>
+                    <h2 class="blog-title text-xl font-bold mb-3 leading-tight">
+                        Vue.js 3 Composition API: Best Practices
+                    </h2>
+                    <p class="opacity-70 text-sm leading-relaxed mb-4">
+                        Deep dive into Vue 3's Composition API with practical examples, performance optimizations, and migration strategies from Options API.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="blog-tag px-2 py-1 bg-green-500/20 text-green-400">Vue.js</span>
+                        <span class="blog-tag px-2 py-1 bg-blue-500/20 text-blue-400">JavaScript</span>
+                        <span class="blog-tag px-2 py-1 bg-purple-500/20 text-purple-400">Frontend</span>
+                    </div>
+                    <a href="blog-vue-composition-api.html" class="blog-read-more">
+                        Read More <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </article>
+
+                <!-- Blog Post 3 -->
+                <article class="blog-card p-6 group">
+                    <div class="blog-meta mb-3">Nov 15, 2024 • 6 min read</div>
+                    <h2 class="blog-title text-xl font-bold mb-3 leading-tight">
+                        Docker & Kubernetes for Full-Stack Developers
+                    </h2>
+                    <p class="opacity-70 text-sm leading-relaxed mb-4">
+                        Complete guide to containerization and orchestration for modern web applications, from development to production deployment.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="blog-tag px-2 py-1 bg-blue-500/20 text-blue-400">Docker</span>
+                        <span class="blog-tag px-2 py-1 bg-cyan-500/20 text-cyan-400">Kubernetes</span>
+                        <span class="blog-tag px-2 py-1 bg-orange-500/20 text-orange-400">DevOps</span>
+                    </div>
+                    <a href="blog-docker-kubernetes.html" class="blog-read-more">
+                        Read More <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </article>
+
+                <!-- Blog Post 4 -->
+                <article class="blog-card p-6 group">
+                    <div class="blog-meta mb-3">Oct 30, 2024 • 8 min read</div>
+                    <h2 class="blog-title text-xl font-bold mb-3 leading-tight">
+                        Implementing OAuth 2.0 and OpenID Connect
+                    </h2>
+                    <p class="opacity-70 text-sm leading-relaxed mb-4">
+                        Comprehensive tutorial on implementing secure authentication and authorization using industry-standard protocols.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="blog-tag px-2 py-1 bg-red-500/20 text-red-400">OAuth</span>
+                        <span class="blog-tag px-2 py-1 bg-purple-500/20 text-purple-400">Security</span>
+                        <span class="blog-tag px-2 py-1 bg-indigo-500/20 text-indigo-400">Authentication</span>
+                    </div>
+                    <a href="blog-oauth-oidc.html" class="blog-read-more">
+                        Read More <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </article>
+
+                <!-- Blog Post 5 -->
+                <article class="blog-card p-6 group">
+                    <div class="blog-meta mb-3">Oct 15, 2024 • 4 min read</div>
+                    <h2 class="blog-title text-xl font-bold mb-3 leading-tight">
+                        Laravel 10: New Features and Performance Tips
+                    </h2>
+                    <p class="opacity-70 text-sm leading-relaxed mb-4">
+                        Explore the latest features in Laravel 10 and learn optimization techniques for better application performance.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="blog-tag px-2 py-1 bg-red-500/20 text-red-400">Laravel</span>
+                        <span class="blog-tag px-2 py-1 bg-orange-500/20 text-orange-400">PHP</span>
+                        <span class="blog-tag px-2 py-1 bg-yellow-500/20 text-yellow-400">Performance</span>
+                    </div>
+                    <a href="blog-laravel-10.html" class="blog-read-more">
+                        Read More <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </article>
+
+                <!-- Blog Post 6 -->
+                <article class="blog-card p-6 group">
+                    <div class="blog-meta mb-3">Sep 28, 2024 • 9 min read</div>
+                    <h2 class="blog-title text-xl font-bold mb-3 leading-tight">
+                        Database Design Patterns for Modern Applications
+                    </h2>
+                    <p class="opacity-70 text-sm leading-relaxed mb-4">
+                        Essential database design patterns and best practices for building scalable and maintainable data architectures.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="blog-tag px-2 py-1 bg-cyan-500/20 text-cyan-400">Database</span>
+                        <span class="blog-tag px-2 py-1 bg-blue-500/20 text-blue-400">Architecture</span>
+                        <span class="blog-tag px-2 py-1 bg-green-500/20 text-green-400">Design Patterns</span>
+                    </div>
+                    <a href="blog-database-design.html" class="blog-read-more">
+                        Read More <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </article>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="px-6 md:px-12 py-12 border-t border-white/10">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="opacity-60 text-sm">
+                © 2024 Hashibul Hasan. Built with passion and code.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const target = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', target);
+            const themeIcon = document.getElementById('theme-icon');
+            themeIcon.className = target === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Initialize theme on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const currentTheme = html.getAttribute('data-theme') || 'dark';
+            themeIcon.className = currentTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        });
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">d:\personal\final\blog.html

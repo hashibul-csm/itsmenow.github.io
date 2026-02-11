@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Scalable Microservices with Spring Boot | Hashibul Hasan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --primary: #8b5cf6;
+            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+            --accent: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
+            --secondary: #f472b6;
+            --secondary-gradient: linear-gradient(135deg, #f472b6 0%, #fb7185 50%, #fca5a5 100%);
+            --bg: #0a0a0f;
+            --bg-gradient: linear-gradient(135deg, #0a0a0f 0%, #111118 50%, #0a0a0f 100%);
+            --text: #ffffff;
+            --text-secondary: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(139, 92, 246, 0.2);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --bg-gradient: linear-gradient(135deg, #fafafa 0%, #f8fafc 50%, #fafafa 100%);
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(148, 163, 184, 0.2);
+            --glow: rgba(139, 92, 246, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text);
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        .blog-content {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .blog-content h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .blog-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+            color: var(--text);
+            position: relative;
+        }
+
+        .blog-content h3::before {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            top: 0.5rem;
+            width: 4px;
+            height: 1rem;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        .blog-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .blog-content code {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: var(--accent);
+            font-weight: 500;
+        }
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+
+        .blog-content pre {
+            background: linear-gradient(135deg, rgba(10, 10, 15, 0.8) 0%, rgba(17, 17, 24, 0.8) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.1), 0 2px 4px -1px rgba(139, 92, 246, 0.06);
+            position: relative;
+        }
+
+        .blog-content pre::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .blog-content pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Modern Blog Typography with Animations */
+        .blog-hero-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: var(--primary-gradient);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite, textGlow 3s ease-in-out infinite alternate;
+            position: relative;
+            display: inline-block;
+        }
+
+        .blog-hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            animation: expandWidth 2s ease-out 0.5s both;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes textGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.3)); }
+            100% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.6)); }
+        }
+
+        @keyframes expandWidth {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Section Headings with Modern Effects */
+        .blog-section-heading {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+            animation: slideInUp 0.8s ease-out;
+            margin-bottom: 1rem;
+        }
+
+        .blog-section-heading::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+            animation: slideInLeft 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px) translateY(-50%);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) translateY(-50%);
+            }
+        }
+
+        /* Subsection Headings with Interactive Effects */
+        .blog-subsection-heading {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            font-weight: 600;
+            color: var(--text);
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .blog-subsection-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary-gradient);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .blog-subsection-heading:hover::after {
+            width: 100%;
+        }
+
+        .blog-subsection-heading:hover {
+            color: var(--accent);
+            transform: translateX(8px);
+        }
+
+        /* Code Block Headings */
+        .code-block-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block-title::before {
+            content: '▸';
+            position: absolute;
+            left: -15px;
+            top: 0;
+            color: var(--primary);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* List Item Headings */
+        .list-item-heading {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .list-item-heading::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .list-item-heading:hover {
+            color: var(--accent);
+        }
+
+        .list-item-heading:hover::before {
+            transform: scale(1.3);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Animated Counter for Steps */
+        .step-counter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-right: 0.75rem;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Enhanced Quote Styling */
+        .blog-quote {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            border-left: 4px solid var(--accent);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            padding: 1.5rem 2rem 1.5rem 2.5rem;
+            border-radius: 8px;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .blog-quote::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            font-size: 3rem;
+            color: var(--accent);
+            opacity: 0.3;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Staggered Animation Classes */
+        .stagger-animation {
+            animation: staggerFadeIn 0.8s ease-out both;
+        }
+
+        .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-animation:nth-child(4) { animation-delay: 0.4s; }
+        .stagger-animation:nth-child(5) { animation-delay: 0.5s; }
+        .stagger-animation:nth-child(6) { animation-delay: 0.6s; }
+        .stagger-animation:nth-child(7) { animation-delay: 0.7s; }
+        .stagger-animation:nth-child(8) { animation-delay: 0.8s; }
+
+        @keyframes staggerFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-btn, .theme-toggle {
+            position: fixed;
+            top: 20px;
+            z-index: 100;
+            width: 3.2rem;
+            height: 3.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--text-secondary);
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.1);
+        }
+
+        .back-btn:hover, .theme-toggle:hover {
+            color: var(--accent);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.2), 0 4px 6px -2px rgba(139, 92, 246, 0.1);
+        }
+
+        .back-btn { left: 20px; }
+        .theme-toggle { right: 20px; cursor: pointer; }
+
+        /* Interactive Button Animations */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes scale {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.6), 0 0 30px rgba(34, 211, 238, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.3); }
+        }
+
+        @keyframes starFill {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            40% { transform: scale(1); }
+            60% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Like/Dislike Button Animations */
+        .like-btn, .dislike-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .like-btn:active, .dislike-btn:active {
+            animation: scale 0.2s ease;
+        }
+
+        .like-btn.liked {
+            animation: heartBeat 0.6s ease;
+        }
+
+        .dislike-btn.disliked {
+            animation: bounce 0.6s ease;
+        }
+
+        .like-btn:hover i, .dislike-btn:hover i {
+            animation: pulse 0.6s infinite;
+        }
+
+        /* Rating Star Animations */
+        .rating-star {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .rating-star:hover {
+            transform: scale(1.2);
+            animation: glow 1s ease-in-out infinite;
+        }
+
+        .rating-star.clicked {
+            animation: starFill 0.4s ease;
+        }
+
+        .rating-star.filled {
+            animation: starFill 0.4s ease;
+        }
+
+        /* Comment Reaction Animations */
+        .comment-like-btn, .comment-dislike-btn {
+            transition: all 0.2s ease;
+        }
+
+        .comment-like-btn:hover, .comment-dislike-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .comment-like-btn:active, .comment-dislike-btn:active {
+            animation: scale 0.15s ease;
+        }
+
+        /* Notification Animation */
+        .notification {
+            animation: slideInRight 0.5s ease, fadeOut 0.5s ease 2.5s;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Counter Animation */
+        .counter-update {
+            animation: bounce 0.5s ease;
+        }
+
+        /* Button Ripple Effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .ripple:active::before {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500/40">
+    <!-- Back to Blog Button -->
+    <a href="blog.html" class="back-btn" title="Back to Blog">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <!-- Theme Toggle -->
+    <button onclick="toggleTheme()" class="theme-toggle" title="Toggle Theme">
+        <i id="theme-icon" class="fas fa-moon"></i>
+    </button>
+
+    <!-- Article Header -->
+    <header class="pt-32 pb-16 px-6 md:px-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-3 py-1 bg-indigo-500/20 text-indigo-400 text-sm rounded-full">Spring Boot</span>
+                <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-sm rounded-full">Microservices</span>
+                <span class="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-full">Java</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+                Building Scalable Microservices with Spring Boot
+            </h1>
+            <div class="flex items-center gap-4 text-sm opacity-70">
+                <span>December 15, 2024</span>
+                <span>•</span>
+                <span>5 min read</span>
+                <span>•</span>
+                <span>Hashibul Hasan</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <main class="px-6 md:px-12 pb-20">
+        <article class="blog-content">
+            <p>
+                Microservices architecture has become the gold standard for building scalable, maintainable, and resilient applications.
+                Spring Boot, with its extensive ecosystem and developer-friendly features, provides an excellent foundation for implementing microservices.
+                In this comprehensive guide, we'll explore the key principles and best practices for building scalable microservices using Spring Boot.
+            </p>
+
+            <h2 class="blog-section-heading">Understanding Microservices Architecture</h2>
+            <p>
+                Microservices architecture breaks down monolithic applications into smaller, independent services that communicate through APIs.
+                Each service is responsible for a specific business capability and can be developed, deployed, and scaled independently.
+            </p>
+
+            <h3 class="blog-subsection-heading">Key Benefits</h3>
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li><strong>Scalability:</strong> Scale individual services based on demand</li>
+                <li><strong>Technology Diversity:</strong> Use different technologies for different services</li>
+                <li><strong>Fault Isolation:</strong> Failure in one service doesn't affect others</li>
+                <li><strong>Team Autonomy:</strong> Teams can work independently on different services</li>
+            </ul>
+
+            <h2 class="blog-section-heading">Setting Up Your Spring Boot Microservice</h2>
+            <p>Let's start by creating a basic Spring Boot microservice with the necessary dependencies.</p>
+
+            <h3 class="blog-subsection-heading">Maven Dependencies</h3>
+            <pre><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+
+            <h2 class="blog-section-heading">Service Discovery with Eureka</h2>
+            <p>
+                Service discovery is crucial in a microservices environment. Spring Cloud Netflix Eureka provides an excellent solution
+                for automatic service registration and discovery.
+            </p>
+
+            <h3 class="blog-subsection-heading">Configuration</h3>
+            <pre><code>@SpringBootApplication
+@EnableEurekaClient
+public class UserServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+    }
+}</code></pre>
+
+            <h2 class="blog-section-heading">API Gateway Implementation</h2>
+            <p>
+                An API Gateway acts as a single entry point for all client requests, routing them to appropriate microservices.
+                Spring Cloud Gateway is the recommended choice for Spring Boot applications.
+            </p>
+
+            <h3 class="blog-subsection-heading">Route Configuration</h3>
+            <pre><code>spring:
+  cloud:
+    gateway:
+      routes:
+      - id: user-service
+        uri: lb://user-service
+        predicates:
+        - Path=/api/users/**
+        filters:
+        - RewritePath=/api/users/(?&lt;path&gt;.*), /$\{path}</code></pre>
+
+            <h2 class="blog-section-heading">Inter-Service Communication</h2>
+            <p>
+                Microservices need to communicate with each other. There are several patterns for inter-service communication:
+            </p>
+
+            <h3 class="blog-subsection-heading">Synchronous Communication</h3>
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li><strong>REST APIs:</strong> Simple and widely adopted</li>
+                <li><strong>gRPC:</strong> High-performance with strong typing</li>
+                <li><strong>GraphQL:</strong> Flexible query language</li>
+            </ul>
+
+            <h3 class="blog-subsection-heading">Asynchronous Communication</h3>
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li><strong>Message Queues:</strong> RabbitMQ, Apache Kafka</li>
+                <li><strong>Event Streaming:</strong> Apache Kafka, AWS Kinesis</li>
+            </ul>
+
+            <h2 class="blog-section-heading">Database Design Considerations</h2>
+            <p>
+                Each microservice should have its own database to maintain loose coupling. Consider using:
+            </p>
+
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li><strong>Database per Service:</strong> Complete isolation</li>
+                <li><strong>Shared Database with Schema Separation:</strong> Easier transactions</li>
+                <li><strong>Event Sourcing:</strong> For complex business logic</li>
+            </ul>
+
+            <h2 class="blog-section-heading">Monitoring and Observability</h2>
+            <p>
+                Monitoring is crucial for maintaining healthy microservices. Implement comprehensive monitoring using:
+            </p>
+
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li><strong>Spring Boot Actuator:</strong> Health checks and metrics</li>
+                <li><strong>Micrometer:</strong> Application metrics</li>
+                <li><strong>Distributed Tracing:</strong> Jaeger, Zipkin</li>
+                <li><strong>Centralized Logging:</strong> ELK stack</li>
+            </ul>
+
+            <h2 class="blog-section-heading">Deployment Strategies</h2>
+            <p>
+                Choose the right deployment strategy based on your requirements:
+            </p>
+
+            <ul class="list-disc list-inside mb-6 space-y-2">
+                <li><strong>Docker Containers:</strong> Consistent environments</li>
+                <li><strong>Kubernetes:</strong> Orchestration and scaling</li>
+                <li><strong>Serverless:</strong> AWS Lambda, Azure Functions</li>
+            </ul>
+
+            <h2 class="blog-section-heading">Conclusion</h2>
+            <p>
+                Building scalable microservices with Spring Boot requires careful planning and implementation of best practices.
+                Focus on proper service boundaries, effective communication patterns, and comprehensive monitoring.
+                The Spring ecosystem provides excellent tools and frameworks to support your microservices journey.
+            </p>
+
+            <p>
+                Remember, microservices architecture is not a silver bullet. Evaluate your requirements carefully and
+                consider the added complexity before adopting this approach.
+            </p>
+        </article>
+    </main>
+
+    <!-- Interactive Section -->
+    <section class="px-6 md:px-12 py-16 border-t border-white/10">
+        <div class="max-w-4xl mx-auto">
+            <!-- Like/Dislike and Rating -->
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-6">
+                    <!-- Like/Dislike Buttons -->
+                    <div class="flex items-center gap-4">
+                        <button id="like-btn" class="like-btn ripple flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-400 hover:text-green-300 transition-all duration-300 border border-green-500/20 hover:border-green-500/40">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span id="like-count" class="text-sm font-medium counter-update">0</span>
+                        </button>
+                        <button id="dislike-btn" class="dislike-btn ripple flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all duration-300 border border-red-500/20 hover:border-red-500/40">
+                            <i class="fas fa-thumbs-down"></i>
+                            <span id="dislike-count" class="text-sm font-medium counter-update">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Rating Stars -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm opacity-70 mr-2">Rate this article:</span>
+                        <div class="flex gap-1" id="rating-stars">
+                            <i class="rating-star far fa-star text-yellow-400 cursor-pointer hover:text-yellow-300 transition-colors" data-rating="1"></i>
+                            <i class="rating-star far fa-star text-yellow-400 cursor-pointer hover:text-yellow-300 transition-colors" data-rating="2"></i>
+                            <i class="rating-star far fa-star text-yellow-400 cursor-pointer hover:text-yellow-300 transition-colors" data-rating="3"></i>
+                            <i class="rating-star far fa-star text-yellow-400 cursor-pointer hover:text-yellow-300 transition-colors" data-rating="4"></i>
+                            <i class="rating-star far fa-star text-yellow-400 cursor-pointer hover:text-yellow-300 transition-colors" data-rating="5"></i>
+                        </div>
+                        <span id="rating-text" class="text-sm opacity-70 ml-2">(0 reviews)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold mb-6">Comments</h3>
+
+                <!-- Add Comment Form -->
+                <div class="blog-card p-6">
+                    <h4 class="text-lg font-semibold mb-4">Leave a Comment</h4>
+                    <form id="comment-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="comment-name" placeholder="Your Name" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-cyan-400 focus:outline-none transition-colors" required>
+                            <input type="email" id="comment-email" placeholder="Your Email (optional)" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-cyan-400 focus:outline-none transition-colors">
+                        </div>
+                        <textarea id="comment-text" placeholder="Share your thoughts..." rows="4" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-cyan-400 focus:outline-none transition-colors resize-vertical" required></textarea>
+                        <button type="submit" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-white font-medium rounded-lg transition-colors duration-300">
+                            <i class="fas fa-paper-plane mr-2"></i>Post Comment
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Comments List -->
+                <div id="comments-list" class="space-y-4">
+                    <!-- Comments will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="px-6 md:px-12 py-12 border-t border-white/10">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="opacity-60 text-sm">
+                © 2024 Hashibul Hasan. Built with passion and code.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const target = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', target);
+            const themeIcon = document.getElementById('theme-icon');
+            themeIcon.className = target === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Initialize theme on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const currentTheme = html.getAttribute('data-theme') || 'dark';
+            themeIcon.className = currentTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+
+            // Initialize interactive features
+            initializeLikes();
+            initializeRating();
+            initializeComments();
+        });
+
+        // Like/Dislike functionality
+        function initializeLikes() {
+            const likeBtn = document.getElementById('like-btn');
+            const dislikeBtn = document.getElementById('dislike-btn');
+            const likeCount = document.getElementById('like-count');
+            const dislikeCount = document.getElementById('dislike-count');
+            const postId = 'blog-spring-microservices';
+
+            // Load saved data
+            const likes = parseInt(localStorage.getItem(`${postId}-likes`)) || 0;
+            const dislikes = parseInt(localStorage.getItem(`${postId}-dislikes`)) || 0;
+            const userAction = localStorage.getItem(`${postId}-user-action`);
+
+            likeCount.textContent = likes;
+            dislikeCount.textContent = dislikes;
+
+            // Set initial button states
+            if (userAction === 'like') {
+                likeBtn.classList.add('bg-green-500/30', 'border-green-500/60');
+                likeBtn.querySelector('i').classList.remove('far');
+                likeBtn.querySelector('i').classList.add('fas');
+            } else if (userAction === 'dislike') {
+                dislikeBtn.classList.add('bg-red-500/30', 'border-red-500/60');
+                dislikeBtn.querySelector('i').classList.remove('far');
+                dislikeBtn.querySelector('i').classList.add('fas');
+            }
+
+            // Like button event
+            likeBtn.addEventListener('click', function() {
+                let currentLikes = parseInt(likeCount.textContent);
+                let currentDislikes = parseInt(dislikeCount.textContent);
+                let currentAction = localStorage.getItem(`${postId}-user-action`);
+
+                if (currentAction === 'like') {
+                    // Unlike
+                    currentLikes--;
+                    localStorage.setItem(`${postId}-likes`, currentLikes);
+                    localStorage.removeItem(`${postId}-user-action`);
+                    likeBtn.classList.remove('bg-green-500/30', 'border-green-500/60', 'liked');
+                    likeBtn.querySelector('i').classList.remove('fas');
+                    likeBtn.querySelector('i').classList.add('far');
+                } else {
+                    // Like (remove dislike if exists)
+                    if (currentAction === 'dislike') {
+                        currentDislikes--;
+                        localStorage.setItem(`${postId}-dislikes`, currentDislikes);
+                        dislikeBtn.classList.remove('bg-red-500/30', 'border-red-500/60', 'disliked');
+                        dislikeBtn.querySelector('i').classList.remove('fas');
+                        dislikeBtn.querySelector('i').classList.add('far');
+                    }
+                    currentLikes++;
+                    localStorage.setItem(`${postId}-likes`, currentLikes);
+                    localStorage.setItem(`${postId}-user-action`, 'like');
+                    likeBtn.classList.add('bg-green-500/30', 'border-green-500/60', 'liked');
+                    likeBtn.querySelector('i').classList.remove('far');
+                    likeBtn.querySelector('i').classList.add('fas');
+
+                    // Trigger counter animation
+                    likeCount.classList.add('counter-update');
+                    setTimeout(() => likeCount.classList.remove('counter-update'), 500);
+                }
+
+                likeCount.textContent = currentLikes;
+                dislikeCount.textContent = currentDislikes;
+            });
+
+            // Dislike button event
+            dislikeBtn.addEventListener('click', function() {
+                let currentLikes = parseInt(likeCount.textContent);
+                let currentDislikes = parseInt(dislikeCount.textContent);
+                let currentAction = localStorage.getItem(`${postId}-user-action`);
+
+                if (currentAction === 'dislike') {
+                    // Undislike
+                    currentDislikes--;
+                    localStorage.setItem(`${postId}-dislikes`, currentDislikes);
+                    localStorage.removeItem(`${postId}-user-action`);
+                    dislikeBtn.classList.remove('bg-red-500/30', 'border-red-500/60', 'disliked');
+                    dislikeBtn.querySelector('i').classList.remove('fas');
+                    dislikeBtn.querySelector('i').classList.add('far');
+                } else {
+                    // Dislike (remove like if exists)
+                    if (currentAction === 'like') {
+                        currentLikes--;
+                        localStorage.setItem(`${postId}-likes`, currentLikes);
+                        likeBtn.classList.remove('bg-green-500/30', 'border-green-500/60', 'liked');
+                        likeBtn.querySelector('i').classList.remove('fas');
+                        likeBtn.querySelector('i').classList.add('far');
+                    }
+                    currentDislikes++;
+                    localStorage.setItem(`${postId}-dislikes`, currentDislikes);
+                    localStorage.setItem(`${postId}-user-action`, 'dislike');
+                    dislikeBtn.classList.add('bg-red-500/30', 'border-red-500/60', 'disliked');
+                    dislikeBtn.querySelector('i').classList.remove('far');
+                    dislikeBtn.querySelector('i').classList.add('fas');
+
+                    // Trigger counter animation
+                    dislikeCount.classList.add('counter-update');
+                    setTimeout(() => dislikeCount.classList.remove('counter-update'), 500);
+                }
+
+                likeCount.textContent = currentLikes;
+                dislikeCount.textContent = currentDislikes;
+            });
+        }
+
+        // Rating functionality
+        function initializeRating() {
+            const stars = document.querySelectorAll('#rating-stars i');
+            const ratingText = document.getElementById('rating-text');
+            const postId = 'blog-spring-microservices';
+
+            // Load saved rating data
+            const savedRating = parseInt(localStorage.getItem(`${postId}-rating`)) || 0;
+            const totalRatings = parseInt(localStorage.getItem(`${postId}-total-ratings`)) || 0;
+            const averageRating = totalRatings > 0 ? parseFloat(localStorage.getItem(`${postId}-average-rating`)) || 0 : 0;
+
+            // Update display
+            updateRatingDisplay(averageRating, totalRatings);
+
+            // Set initial star states
+            if (savedRating > 0) {
+                for (let i = 0; i < savedRating; i++) {
+                    stars[i].classList.remove('far');
+                    stars[i].classList.add('fas');
+                }
+            }
+
+            // Star click events
+            stars.forEach((star, index) => {
+                star.addEventListener('click', function() {
+                    const rating = index + 1;
+                    const userRated = localStorage.getItem(`${postId}-user-rated`);
+
+                    if (userRated) {
+                        alert('You have already rated this article.');
+                        return;
+                    }
+
+                    // Add clicked animation to current star
+                    star.classList.add('clicked');
+
+                    // Update stars display with animation
+                    stars.forEach((s, i) => {
+                        if (i <= index) {
+                            s.classList.remove('far');
+                            s.classList.add('fas', 'filled');
+                            // Add staggered animation delay
+                            setTimeout(() => s.classList.add('filled'), i * 100);
+                        } else {
+                            s.classList.remove('fas', 'filled');
+                            s.classList.add('far');
+                        }
+                    });
+
+                    // Remove clicked class after animation
+                    setTimeout(() => star.classList.remove('clicked'), 400);
+
+                    // Calculate new average
+                    const newTotalRatings = totalRatings + 1;
+                    const newAverageRating = ((averageRating * totalRatings) + rating) / newTotalRatings;
+
+                    // Save data
+                    localStorage.setItem(`${postId}-rating`, rating);
+                    localStorage.setItem(`${postId}-total-ratings`, newTotalRatings);
+                    localStorage.setItem(`${postId}-average-rating`, newAverageRating);
+                    localStorage.setItem(`${postId}-user-rated`, 'true');
+
+                    // Update display with animation
+                    setTimeout(() => {
+                        updateRatingDisplay(newAverageRating, newTotalRatings);
+                    }, 400);
+                });
+            });
+        }
+
+        function updateRatingDisplay(average, total) {
+            const ratingText = document.getElementById('rating-text');
+            const stars = document.querySelectorAll('#rating-stars i');
+
+            // Update text
+            ratingText.textContent = `(${total} review${total !== 1 ? 's' : ''})`;
+
+            // Update star display based on average
+            stars.forEach((star, index) => {
+                if (index < Math.floor(average)) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else if (index < average) {
+                    star.classList.remove('far', 'fas');
+                    star.classList.add('fas', 'fa-star-half-alt');
+                } else {
+                    star.classList.remove('fas', 'fa-star-half-alt');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        // Comments functionality
+        function initializeComments() {
+            const commentForm = document.getElementById('comment-form');
+            const commentsList = document.getElementById('comments-list');
+            const postId = 'blog-spring-microservices';
+
+            // Load saved comments
+            loadComments();
+
+            // Handle comment submission
+            commentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('comment-name').value.trim();
+                const email = document.getElementById('comment-email').value.trim();
+                const text = document.getElementById('comment-text').value.trim();
+
+                if (!name || !text) {
+                    alert('Please fill in your name and comment.');
+                    return;
+                }
+
+                const comment = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    text: text,
+                    date: new Date().toISOString(),
+                    likes: 0,
+                    dislikes: 0
+                };
+
+                // Save comment
+                saveComment(comment);
+
+                // Add to display
+                addCommentToDOM(comment);
+
+                // Clear form
+                commentForm.reset();
+
+                // Show success message
+                showNotification('Comment posted successfully!', 'success');
+            });
+        }
+
+        function saveComment(comment) {
+            const postId = 'blog-spring-microservices';
+            const comments = getComments();
+            comments.push(comment);
+            localStorage.setItem(`${postId}-comments`, JSON.stringify(comments));
+        }
+
+        function getComments() {
+            const postId = 'blog-spring-microservices';
+            const comments = localStorage.getItem(`${postId}-comments`);
+            return comments ? JSON.parse(comments) : [];
+        }
+
+        function loadComments() {
+            const comments = getComments();
+            comments.forEach(comment => addCommentToDOM(comment));
+        }
+
+        function addCommentToDOM(comment) {
+            const commentsList = document.getElementById('comments-list');
+            const commentElement = document.createElement('div');
+            commentElement.className = 'blog-card p-6';
+            commentElement.setAttribute('data-comment-id', comment.id);
+
+            const date = new Date(comment.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            commentElement.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                            ${comment.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">${comment.name}</h5>
+                            <p class="text-sm opacity-70">${date}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="comment-like-btn flex items-center gap-1 px-2 py-1 rounded text-green-400 hover:bg-green-500/10 transition-colors" data-comment-id="${comment.id}">
+                            <i class="fas fa-thumbs-up text-xs"></i>
+                            <span class="text-xs">${comment.likes || 0}</span>
+                        </button>
+                        <button class="comment-dislike-btn flex items-center gap-1 px-2 py-1 rounded text-red-400 hover:bg-red-500/10 transition-colors" data-comment-id="${comment.id}">
+                            <i class="fas fa-thumbs-down text-xs"></i>
+                            <span class="text-xs">${comment.dislikes || 0}</span>
+                        </button>
+                    </div>
+                </div>
+                <p class="opacity-90 leading-relaxed">${comment.text}</p>
+            `;
+
+            commentsList.appendChild(commentElement);
+
+            // Add event listeners for comment like/dislike
+            const likeBtn = commentElement.querySelector('.comment-like-btn');
+            const dislikeBtn = commentElement.querySelector('.comment-dislike-btn');
+
+            likeBtn.addEventListener('click', function() {
+                // Add click animation
+                likeBtn.style.animation = 'scale 0.15s ease';
+                setTimeout(() => likeBtn.style.animation = '', 150);
+
+                updateCommentReaction(comment.id, 'like');
+            });
+
+            dislikeBtn.addEventListener('click', function() {
+                // Add click animation
+                dislikeBtn.style.animation = 'scale 0.15s ease';
+                setTimeout(() => dislikeBtn.style.animation = '', 150);
+
+                updateCommentReaction(comment.id, 'dislike');
+            });
+        }
+
+        function updateCommentReaction(commentId, reaction) {
+            const comments = getComments();
+            const comment = comments.find(c => c.id === commentId);
+            const postId = 'blog-spring-microservices';
+
+            if (!comment) return;
+
+            // Update reaction count
+            if (reaction === 'like') {
+                comment.likes = (comment.likes || 0) + 1;
+            } else if (reaction === 'dislike') {
+                comment.dislikes = (comment.dislikes || 0) + 1;
+            }
+
+            // Save updated comments
+            localStorage.setItem(`${postId}-comments`, JSON.stringify(comments));
+
+            // Update display with animation
+            const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+            if (commentElement) {
+                const likeBtn = commentElement.querySelector('.comment-like-btn span');
+                const dislikeBtn = commentElement.querySelector('.comment-dislike-btn span');
+
+                if (reaction === 'like') {
+                    likeBtn.textContent = comment.likes;
+                    likeBtn.classList.add('counter-update');
+                    setTimeout(() => likeBtn.classList.remove('counter-update'), 500);
+                } else if (reaction === 'dislike') {
+                    dislikeBtn.textContent = comment.dislikes;
+                    dislikeBtn.classList.add('counter-update');
+                    setTimeout(() => dislikeBtn.classList.remove('counter-update'), 500);
+                }
+            }
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification fixed top-20 right-4 px-6 py-3 rounded-lg font-medium z-50 ${
+                type === 'success' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'
+            }`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">d:\personal\final\blog-spring-microservices.html
